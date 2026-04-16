@@ -219,11 +219,10 @@ export default function Landing() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
-        className="relative z-10 w-full flex items-center justify-between px-8 md:px-12 lg:px-16 py-6 max-w-7xl mx-auto"
+        className="relative z-10 w-full px-8 md:px-12 lg:px-16 py-6 max-w-7xl mx-auto"
       >
-        <span className="text-base font-headline italic text-stone-50/25">Threshold</span>
         <p className="text-[10px] font-label uppercase tracking-widest text-stone-400/55">
-          Cost data last updated per city · Not financial advice
+          Not financial advice
         </p>
       </motion.footer>
     </div>
