@@ -36,7 +36,7 @@ export default function ScenarioBConfig({ config, inputs, onChange, onExit }: Pr
 
       <div className="flex flex-col gap-1">
         <label htmlFor="b-borough" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Borough
+          {config.id === 'london' ? 'Borough' : 'District'}
         </label>
         <select
           id="b-borough"

@@ -369,9 +369,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
             <DistrictSelect
               config={config}
               districtId={inputs.districtId}
-              tflZone={1}
               onDistrictChange={handleDistrictChange}
-              onZoneChange={() => {}}
               showZone={false}
             />
 

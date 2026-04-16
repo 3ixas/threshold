@@ -5,11 +5,11 @@ const TFL_ZONES = [1, 2, 3, 4, 5, 6] as const
 interface Props {
   config: CityConfig
   districtId: string
-  tflZone: number
   onDistrictChange: (districtId: string) => void
-  onZoneChange: (zone: number) => void
   /** Whether to show the TfL zone override select. Defaults to true. */
   showZone?: boolean
+  tflZone?: number
+  onZoneChange?: (zone: number) => void
   /** Override the dropdown label. Defaults to 'Borough' for London, 'District' for Swiss. */
   districtLabel?: string
 }
@@ -17,10 +17,10 @@ interface Props {
 export default function DistrictSelect({
   config,
   districtId,
-  tflZone,
   onDistrictChange,
-  onZoneChange,
   showZone = true,
+  tflZone,
+  onZoneChange,
   districtLabel,
 }: Props) {
   const label = districtLabel ?? (config.id === 'london' ? 'Borough' : 'District')
@@ -45,7 +45,7 @@ export default function DistrictSelect({
         </select>
       </div>
 
-      {showZone && <div className="flex flex-col gap-1">
+      {showZone && tflZone !== undefined && onZoneChange && <div className="flex flex-col gap-1">
         <label htmlFor="zone-select" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
           TfL Zone
         </label>

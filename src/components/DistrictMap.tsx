@@ -9,9 +9,9 @@ interface Props {
   onSelect: (onsCode: string) => void
 }
 
-const FILL_LAYER = 'borough-fill'
-const LINE_LAYER = 'borough-line'
-const SOURCE = 'boroughs'
+const FILL_LAYER = 'district-fill'
+const LINE_LAYER = 'district-line'
+const SOURCE = 'districts'
 
 export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) {
   const mapRef = useRef<MapRef>(null)
@@ -85,7 +85,7 @@ export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) 
         id={SOURCE}
         type="geojson"
         data={geojson}
-        // Use the ONS code as the feature ID so setFeatureState can target it
+        // Use the district code as the feature ID so setFeatureState can target it
         promoteId="code"
       >
         <Layer

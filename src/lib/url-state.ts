@@ -28,6 +28,8 @@ export function serialise(inputs: CalculatorInputs): URLSearchParams {
   if (inputs.broadbandOverride !== undefined)     params.set('broadband', String(inputs.broadbandOverride))
   if (inputs.movingCostsOverride !== undefined)   params.set('moving', String(inputs.movingCostsOverride))
   if (inputs.furnitureBudgetOverride !== undefined) params.set('furniture', String(inputs.furnitureBudgetOverride))
+  // London TfL zone → monthly transport value (from london.tflAnnualCosts / 12):
+  //   zone 1 & 2 → ~149, zone 3 → 175, zone 4 → 214, zone 5 → ~255, zone 6 → ~279
   if (inputs.transportOverride !== undefined)     params.set('transport', String(inputs.transportOverride))
   if (inputs.healthInsuranceOverride !== undefined) params.set('health', String(inputs.healthInsuranceOverride))
   if (inputs.takeHome !== undefined)              params.set('income', String(inputs.takeHome))

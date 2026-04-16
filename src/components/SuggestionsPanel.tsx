@@ -1,7 +1,6 @@
 import type { Suggestion } from '../lib/suggestions'
 import type { CalculatorInputs, Currency } from '../lib/types'
-
-const symbol: Record<Currency, string> = { GBP: '£', CHF: 'CHF ' }
+import { currencySymbol } from '../lib/format'
 
 interface Props {
   suggestions: Suggestion[]
@@ -32,12 +31,12 @@ export default function SuggestionsPanel({ suggestions, currency, onApply }: Pro
             ].join(' ')}
             style={{ transitionTimingFunction: 'cubic-bezier(0.25, 1, 0.5, 1)' }}
           >
-            <span className="text-sm font-body text-on-surface transition-colors duration-150 group-hover:text-accent">
+            <span data-testid={`suggestion-${i}-label`} className="text-sm font-body text-on-surface transition-colors duration-150 group-hover:text-accent">
               {s.label}
             </span>
             <span className="flex items-center gap-2 ml-4 shrink-0">
-              <span className="text-sm font-headline tabular-nums text-accent">
-                −{symbol[currency]}{Math.round(s.saving).toLocaleString('en-GB')}
+              <span data-testid={`suggestion-${i}-saving`} className="text-sm font-headline tabular-nums text-accent">
+                −{currencySymbol[currency]}{Math.round(s.saving).toLocaleString('en-GB')}
               </span>
               <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">/mo</span>
               <span
