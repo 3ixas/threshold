@@ -13,30 +13,30 @@ const baseInputs: CalculatorInputs = {
 describe('ScenarioBConfig', () => {
   it('renders a borough dropdown', () => {
     render(<ScenarioBConfig config={london} inputs={baseInputs} onChange={() => {}} onExit={() => {}} />)
-    expect(screen.getByLabelText(/scenario b.*borough/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^borough$/i)).toBeInTheDocument()
   })
 
   it('renders a property type dropdown', () => {
     render(<ScenarioBConfig config={london} inputs={baseInputs} onChange={() => {}} onExit={() => {}} />)
-    expect(screen.getByLabelText(/scenario b.*property/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^property type$/i)).toBeInTheDocument()
   })
 
   it('renders a living arrangement dropdown', () => {
     render(<ScenarioBConfig config={london} inputs={baseInputs} onChange={() => {}} onExit={() => {}} />)
-    expect(screen.getByLabelText(/scenario b.*living/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^living arrangement$/i)).toBeInTheDocument()
   })
 
   it('calls onChange when borough changes', () => {
     const onChange = vi.fn()
     render(<ScenarioBConfig config={london} inputs={baseInputs} onChange={onChange} onExit={() => {}} />)
-    fireEvent.change(screen.getByLabelText(/scenario b.*borough/i), { target: { value: 'camden' } })
+    fireEvent.change(screen.getByLabelText(/^borough$/i), { target: { value: 'camden' } })
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ districtId: 'camden' }))
   })
 
   it('calls onChange when property type changes', () => {
     const onChange = vi.fn()
     render(<ScenarioBConfig config={london} inputs={baseInputs} onChange={onChange} onExit={() => {}} />)
-    fireEvent.change(screen.getByLabelText(/scenario b.*property/i), { target: { value: '2bed' } })
+    fireEvent.change(screen.getByLabelText(/^property type$/i), { target: { value: '2bed' } })
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ propertyType: '2bed' }))
   })
 

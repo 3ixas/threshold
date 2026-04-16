@@ -1,3 +1,4 @@
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useSearchParams } from 'react-router-dom'

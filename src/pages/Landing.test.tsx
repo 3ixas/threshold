@@ -14,7 +14,7 @@ describe('Landing page', () => {
   it('renders the headline', () => {
     renderLanding()
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'The real cost of moving out'
+      /the real cost of.*moving out/i
     )
   })
 

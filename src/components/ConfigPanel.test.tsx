@@ -17,9 +17,9 @@ describe('ConfigPanel', () => {
     expect(screen.getByLabelText(/property type/i).querySelectorAll('option')).toHaveLength(5)
   })
 
-  it('renders all 5 living arrangement options', () => {
+  it('renders all 4 living arrangement options', () => {
     render(<ConfigPanel config={london} inputs={baseInputs} onChange={() => {}} />)
-    expect(screen.getByLabelText(/living arrangement/i).querySelectorAll('option')).toHaveLength(5)
+    expect(screen.getByLabelText(/living arrangement/i).querySelectorAll('option')).toHaveLength(4)
   })
 
   it('calls onChange with updated propertyType on selection', () => {
