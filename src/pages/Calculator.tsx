@@ -154,9 +154,9 @@ function LondonCalculator() {
       </header>
 
       {/* Main: 55% map | 45% controls + results */}
-      <div className="flex-1 flex flex-col md:flex-row min-h-0">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Map panel — 55% */}
-        <div className="w-full md:w-[55%] h-[45vh] md:h-auto relative">
+        <div className="w-full h-[40vh] md:h-[320px] shrink-0 relative">
           <DistrictMap
             geojson={londonBoroughs}
             selectedCode={selectedOnsCode}
@@ -166,12 +166,12 @@ function LondonCalculator() {
 
         {/* Right panel — 45%, scrollable */}
         <motion.div
-          className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20"
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex-1 overflow-y-auto bg-background border-t border-outline-variant/20"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 30, delay: 0.08 }}
         >
-          <div className="px-8 py-8 flex flex-col gap-6">
+          <div className="px-8 md:px-12 py-8 flex flex-col gap-6 max-w-2xl">
             {/* District heading */}
             <div>
               <h1 className="text-2xl md:text-3xl font-headline text-on-surface leading-tight">
@@ -358,18 +358,18 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
         </Link>
       </header>
 
-      <div className="flex-1 flex flex-col md:flex-row min-h-0">
-        <div className="w-full md:w-[55%] h-[45vh] md:h-auto relative">
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="w-full h-[40vh] md:h-[320px] shrink-0 relative">
           <DistrictMap geojson={geojson as Parameters<typeof DistrictMap>[0]['geojson']} selectedCode={selectedCode} onSelect={handleMapSelect} />
         </div>
 
         <motion.div
-          className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20"
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex-1 overflow-y-auto bg-background border-t border-outline-variant/20"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 30, delay: 0.08 }}
         >
-          <div className="px-8 py-8 flex flex-col gap-6">
+          <div className="px-8 md:px-12 py-8 flex flex-col gap-6 max-w-2xl">
             <div>
               <h1 className="text-2xl md:text-3xl font-headline text-on-surface leading-tight">
                 {currentDistrict?.name ?? 'Select a district'}

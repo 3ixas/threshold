@@ -128,12 +128,26 @@ export default function AffordabilityPanel({
                   {result.monthsToMoveIn}
                 </motion.p>
               </div>
+              {/* Explain the gap so users understand why they're not CAN_AFFORD_NOW */}
+              {result.upfrontShortfall !== undefined && (
+                <div className="flex justify-between items-baseline">
+                  <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
+                    Still need for upfront
+                  </span>
+                  <span className="text-sm font-body tabular-nums text-on-surface">
+                    {fmt(result.upfrontShortfall, currency)}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between items-baseline">
                 <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">Monthly surplus</span>
                 <span data-testid="surplus-amount" className="text-sm font-body tabular-nums text-on-surface">
                   {fmt(result.surplus, currency)}
                 </span>
               </div>
+              <p className="text-xs font-body text-on-surface-variant/60 leading-relaxed">
+                Your monthly surplus covers costs. Once your savings reach the upfront total, you're ready to move.
+              </p>
               <p data-testid="affordability-status" className="sr-only">Not quite yet</p>
             </div>
           )}

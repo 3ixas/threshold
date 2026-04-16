@@ -18,6 +18,8 @@ export interface AffordabilityResult {
   surplus: number
   /** Months of saving needed. 0 = can move now. null = income insufficient. */
   monthsToMoveIn: number | null
+  /** How much more savings are needed before moving in (only set for NOT_YET). */
+  upfrontShortfall?: number
 }
 
 export function calculateAffordability(inputs: AffordabilityInputs): AffordabilityResult {
@@ -32,6 +34,7 @@ export function calculateAffordability(inputs: AffordabilityInputs): Affordabili
     return { status: AffordabilityStatus.CAN_AFFORD_NOW, surplus, monthsToMoveIn: 0 }
   }
 
-  const monthsToMoveIn = Math.ceil((upfrontTotal - savings) / surplus)
-  return { status: AffordabilityStatus.NOT_YET, surplus, monthsToMoveIn }
+  const upfrontShortfall = Math.round((upfrontTotal - savings) * 100) / 100
+  const monthsToMoveIn = Math.ceil(upfrontShortfall / surplus)
+  return { status: AffordabilityStatus.NOT_YET, surplus, monthsToMoveIn, upfrontShortfall }
 }
