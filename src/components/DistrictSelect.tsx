@@ -35,7 +35,7 @@ export default function DistrictSelect({
           id="borough-select"
           value={districtId}
           onChange={e => onDistrictChange(e.target.value)}
-          className="bg-surface-container-low border border-outline-variant text-on-surface font-body text-sm px-3 py-2 focus:outline-none focus:border-primary"
+          className="bg-surface-container-low border-b border-outline-variant text-on-surface font-body text-sm px-3 py-2 focus:outline-none focus:border-accent"
         >
           {config.districts.map(d => (
             <option key={d.id} value={d.id}>
@@ -53,7 +53,7 @@ export default function DistrictSelect({
           id="zone-select"
           value={String(tflZone)}
           onChange={e => onZoneChange(Number(e.target.value))}
-          className="bg-surface-container-low border border-outline-variant text-on-surface font-body text-sm px-3 py-2 focus:outline-none focus:border-primary"
+          className="bg-surface-container-low border-b border-outline-variant text-on-surface font-body text-sm px-3 py-2 focus:outline-none focus:border-accent"
         >
           {TFL_ZONES.map(z => (
             <option key={z} value={String(z)}>

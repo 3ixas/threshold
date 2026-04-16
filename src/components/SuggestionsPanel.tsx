@@ -25,27 +25,24 @@ export default function SuggestionsPanel({ suggestions, currency, onApply }: Pro
             onClick={() => onApply(s.updatedInputs)}
             className={[
               'flex items-center justify-between w-full text-left px-4 py-3.5',
-              'bg-surface-container-low border border-outline-variant/30',
-              // Specific transition properties only
+              'bg-surface-container-low border-b border-outline-variant/30',
               'transition-[background-color,border-color,transform] duration-150 group',
-              // Hover gated by pointer capability
-              'supports-[not_(hover:none)]:hover:bg-surface-container supports-[not_(hover:none)]:hover:border-primary/40',
-              // Press feedback
-              'active:scale-[0.97] active:transition-none',
+              'supports-[not_(hover:none)]:hover:bg-surface-container supports-[not_(hover:none)]:hover:border-accent/40',
+              'active:scale-[0.96] active:transition-none',
             ].join(' ')}
-            style={{ transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)' }}
+            style={{ transitionTimingFunction: 'cubic-bezier(0.25, 1, 0.5, 1)' }}
           >
-            <span className="text-sm font-body text-on-surface transition-colors duration-150 group-hover:text-primary">
+            <span className="text-sm font-body text-on-surface transition-colors duration-150 group-hover:text-accent">
               {s.label}
             </span>
             <span className="flex items-center gap-2 ml-4 shrink-0">
-              <span className="text-sm font-headline tabular-nums text-primary">
+              <span className="text-sm font-headline tabular-nums text-accent">
                 −{symbol[currency]}{Math.round(s.saving).toLocaleString('en-GB')}
               </span>
               <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">/mo</span>
-              {/* Arrow: 4px translate at 150ms — visible and snappy */}
-              <span className="text-on-surface-variant group-hover:text-primary group-hover:translate-x-1 transition-[color,transform] duration-150 text-base leading-none"
-                style={{ transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)' }}
+              <span
+                className="text-on-surface-variant group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 text-base leading-none"
+                style={{ transitionTimingFunction: 'cubic-bezier(0.25, 1, 0.5, 1)' }}
               >
                 →
               </span>

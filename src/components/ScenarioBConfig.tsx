@@ -43,13 +43,13 @@ export default function ScenarioBConfig({ config, inputs, onChange, onExit }: Pr
 
       <div className="flex flex-col gap-1">
         <label htmlFor="b-borough" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Scenario B Borough
+          Borough
         </label>
         <select
           id="b-borough"
           value={inputs.districtId}
           onChange={e => set({ districtId: e.target.value })}
-          className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-primary"
+          className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-accent"
         >
           {config.districts.map(d => (
             <option key={d.id} value={d.id}>{d.name}</option>
@@ -59,13 +59,13 @@ export default function ScenarioBConfig({ config, inputs, onChange, onExit }: Pr
 
       <div className="flex flex-col gap-1">
         <label htmlFor="b-property" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Scenario B Property type
+          Property type
         </label>
         <select
           id="b-property"
           value={inputs.propertyType}
           onChange={e => set({ propertyType: e.target.value as PropertyType })}
-          className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-primary"
+          className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-accent"
         >
           {PROPERTY_TYPES.map(p => (
             <option key={p.value} value={p.value}>{p.label}</option>
@@ -75,13 +75,13 @@ export default function ScenarioBConfig({ config, inputs, onChange, onExit }: Pr
 
       <div className="flex flex-col gap-1">
         <label htmlFor="b-living" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Scenario B Living arrangement
+          Living arrangement
         </label>
         <select
           id="b-living"
           value={String(inputs.occupants)}
           onChange={e => set({ occupants: Number(e.target.value) as 1 | 2 | 3 | 4 })}
-          className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-primary"
+          className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-accent"
         >
           {OCCUPANT_OPTIONS.map(o => (
             <option key={o.value} value={String(o.value)}>{o.label}</option>

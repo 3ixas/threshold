@@ -74,7 +74,7 @@ function CityRow({ name, region, currency, to, index, hoveredIndex, setHoveredIn
             style={{
               fontSize: 'clamp(2.25rem, 5.5vw, 4.5rem)',
               lineHeight: 1,
-              color: isThisHovered ? '#d4956a' : '#fafaf9',
+              color: isThisHovered ? 'var(--color-accent)' : '#fafaf9',
               opacity: isOtherHovered ? 0.32 : 1,
               transform: isThisHovered ? 'translateX(10px)' : 'translateX(0)',
               transition: [
@@ -102,7 +102,7 @@ function CityRow({ name, region, currency, to, index, hoveredIndex, setHoveredIn
               className="material-symbols-outlined font-light select-none"
               style={{
                 fontSize: '20px',
-                color: isThisHovered ? '#b87941' : '#9ca3af',
+                color: isThisHovered ? 'var(--color-accent)' : '#9ca3af',
                 transform: isThisHovered ? 'translateX(5px)' : 'translateX(0)',
                 transition: [
                   'color 250ms cubic-bezier(0.25, 1, 0.5, 1)',
@@ -147,7 +147,7 @@ export default function Landing() {
         transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
         className="relative z-10 w-full px-8 md:px-12 lg:px-16 pt-7 pb-0 max-w-7xl mx-auto"
       >
-        <span className="text-[11px] font-label uppercase tracking-[0.2em] text-stone-300/50 select-none">
+        <span className="text-[12px] font-label uppercase tracking-[0.2em] text-stone-300/55 select-none">
           Threshold
         </span>
       </motion.header>
@@ -166,8 +166,7 @@ export default function Landing() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.22, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="inline-block text-[10px] font-label uppercase tracking-[0.22em] mb-5 md:mb-7"
-            style={{ color: '#b87941' }}
+            className="inline-block text-[10px] font-label uppercase tracking-[0.22em] text-accent mb-5 md:mb-7"
           >
             Rental affordability · London · Basel · Zurich
           </motion.span>
@@ -184,7 +183,7 @@ export default function Landing() {
             <br />
             <span className="italic text-stone-300/90">moving out</span>
             {/* Amber period — the one signature colour moment in the hero */}
-            <span style={{ color: '#b87941' }}>.</span>
+            <span className="text-accent">.</span>
           </h1>
 
           <motion.p

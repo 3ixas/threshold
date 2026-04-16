@@ -134,13 +134,13 @@ function LondonCalculator() {
   const currentDistrict = getDistrictById(london, inputs.districtId)
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-dvh bg-background flex flex-col">
       {/* Nav */}
       <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
         <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">
           Threshold
         </Link>
-        <span className="select-none" style={{ color: '#b87941', opacity: 0.7 }}>·</span>
+        <span className="text-accent/70 select-none">·</span>
         <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
           London
         </span>
@@ -171,7 +171,7 @@ function LondonCalculator() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 30, delay: 0.08 }}
         >
-          <div className="px-8 md:px-12 py-8 flex flex-col gap-6 max-w-2xl">
+          <div className="px-8 md:px-12 py-8 flex flex-col gap-6 max-w-3xl mx-auto w-full">
             {/* District heading */}
             <div>
               <h1 className="text-2xl md:text-3xl font-headline text-on-surface leading-tight">
@@ -344,10 +344,10 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
   const currency = config.currency
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-dvh bg-background flex flex-col">
       <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
         <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">Threshold</Link>
-        <span className="select-none" style={{ color: '#b87941', opacity: 0.7 }}>·</span>
+        <span className="text-accent/70 select-none">·</span>
         <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{config.name}</span>
         <Link
           to="/"
@@ -369,7 +369,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 30, delay: 0.08 }}
         >
-          <div className="px-8 md:px-12 py-8 flex flex-col gap-6 max-w-2xl">
+          <div className="px-8 md:px-12 py-8 flex flex-col gap-6 max-w-3xl mx-auto w-full">
             <div>
               <h1 className="text-2xl md:text-3xl font-headline text-on-surface leading-tight">
                 {currentDistrict?.name ?? 'Select a district'}

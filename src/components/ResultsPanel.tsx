@@ -48,10 +48,7 @@ function TotalBlock({ label, value, currency, testId }: TotalBlockProps) {
     /* Double-bezel: outer hairline frame + inner surface — editorial premium detail */
     <div className="total-block border border-outline-variant/20 p-[3px] mb-4">
       <div className="bg-surface-container-low px-5 py-6">
-        <p
-          className="text-[10px] font-label uppercase tracking-widest mb-3"
-          style={{ color: '#b87941' }}
-        >
+        <p className="text-[10px] font-label uppercase tracking-widest text-accent mb-3">
           {label}
         </p>
         {/* key=rounded ensures animation fires only when the displayed value changes */}
