@@ -10,7 +10,9 @@ import DistrictSelect from '../components/DistrictSelect'
 import ConfigPanel from '../components/ConfigPanel'
 import ResultsPanel from '../components/ResultsPanel'
 import AffordabilityPanel from '../components/AffordabilityPanel'
+import SuggestionsPanel from '../components/SuggestionsPanel'
 import { calculateAffordability } from '../lib/affordability'
+import { generateSuggestions } from '../lib/suggestions'
 import type { CalculatorInputs } from '../lib/types'
 
 interface CalculatorProps {
@@ -25,6 +27,8 @@ function LondonCalculator() {
   // Compute results reactively from inputs — no submit button
   const monthly = useMemo(() => calculateMonthly(london, inputs), [inputs])
   const upfront = useMemo(() => calculateUpfront(london, inputs), [inputs])
+  const suggestions = useMemo(() => generateSuggestions(inputs, london), [inputs])
+
   const affordability = useMemo(() => {
     if (!inputs.takeHome) return null
     return calculateAffordability({
@@ -142,6 +146,17 @@ function LondonCalculator() {
                 onChange={handleConfigChange}
               />
             </div>
+
+            {/* What-if suggestions */}
+            {suggestions.length > 0 && (
+              <div className="border-t border-outline-variant/20 pt-6">
+                <SuggestionsPanel
+                  suggestions={suggestions}
+                  currency="GBP"
+                  onApply={setInputs}
+                />
+              </div>
+            )}
 
             {/* Results */}
             <div className="border-t border-outline-variant/20 pt-6">
