@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion'
 import { AffordabilityStatus } from '../lib/affordability'
 import type { AffordabilityResult } from '../lib/affordability'
 import type { CityId, Currency } from '../lib/types'
@@ -80,18 +81,33 @@ export default function AffordabilityPanel({
         </div>
       </div>
 
-      {/* Result */}
+      {/* Result — slides in on first entry, animates between states */}
+      <AnimatePresence>
       {result && (
-        <div className="border-t border-outline-variant/20 pt-5">
+        <motion.div
+          key="affordability-result"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          className="border-t border-outline-variant/20 pt-5"
+        >
           {result.status === AffordabilityStatus.CAN_AFFORD_NOW && (
             <div className="bg-surface-container-low px-5 py-5">
               <p className="text-[10px] font-label uppercase tracking-widest text-tertiary mb-2">
                 You can move in now
               </p>
-              <p data-testid="affordability-status" className="text-4xl font-headline tabular-nums text-tertiary leading-none">
+              <motion.p
+                key={Math.round(result.surplus)}
+                data-testid="affordability-status"
+                initial={{ opacity: 0.5, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 38 }}
+                className="text-4xl font-headline tabular-nums text-tertiary leading-none"
+              >
                 {fmt(result.surplus, currency)}
                 <span className="text-base font-label ml-2 tracking-wider">/mo surplus</span>
-              </p>
+              </motion.p>
             </div>
           )}
 
@@ -101,9 +117,16 @@ export default function AffordabilityPanel({
                 <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-2">
                   Months until you can move in
                 </p>
-                <p data-testid="months-to-move-in" className="text-5xl font-headline tabular-nums text-on-surface leading-none">
+                <motion.p
+                  key={result.monthsToMoveIn}
+                  data-testid="months-to-move-in"
+                  initial={{ opacity: 0.5, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 600, damping: 38 }}
+                  className="text-5xl font-headline tabular-nums text-on-surface leading-none"
+                >
                   {result.monthsToMoveIn}
-                </p>
+                </motion.p>
               </div>
               <div className="flex justify-between items-baseline">
                 <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">Monthly surplus</span>
@@ -126,8 +149,9 @@ export default function AffordabilityPanel({
               </p>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   )
 }

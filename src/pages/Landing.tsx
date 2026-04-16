@@ -1,109 +1,189 @@
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
-interface CityCardProps {
+const CITIES = [
+  { name: 'London',  region: 'England',      currency: 'GBP', to: '/london' },
+  { name: 'Basel',   region: 'Switzerland',  currency: 'CHF', to: '/basel'  },
+  { name: 'Zurich',  region: 'Switzerland',  currency: 'CHF', to: '/zurich' },
+]
+
+interface CityRowProps {
   name: string
   region: string
   currency: string
   to: string
-  staggerClass: string
+  index: number
+  hoveredIndex: number | null
+  setHoveredIndex: (i: number | null) => void
 }
 
-function CityCard({ name, region, currency, to, staggerClass }: CityCardProps) {
+function CityRow({ name, region, currency, to, index, hoveredIndex, setHoveredIndex }: CityRowProps) {
+  const isThisHovered = hoveredIndex === index
+  const isOtherHovered = hoveredIndex !== null && !isThisHovered
+
   return (
-    <Link
-      to={to}
-      className={[
-        'group block w-full md:w-[280px]',
-        'bg-white/25 backdrop-blur-[24px]',
-        'border border-white/40',
-        'p-6 md:p-8',
-        'flex justify-between items-center',
-        // Specific properties only — not transition-all
-        'transition-[border-color,transform] duration-200',
-        // Hover: lift + border brighten. Gated by pointer capability.
-        'supports-[not_(hover:none)]:hover:-translate-y-1 supports-[not_(hover:none)]:hover:border-stone-200/60',
-        // Active: press
-        'active:scale-[0.97] active:transition-none',
-        staggerClass,
-      ].join(' ')}
-      style={{ transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)' }}
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        type: 'spring',
+        stiffness: 380,
+        damping: 28,
+        delay: 0.52 + index * 0.09,
+      }}
     >
-      <div className="flex flex-col">
-        <span className="text-2xl md:text-3xl font-headline text-stone-50">
+      <Link
+        to={to}
+        onMouseEnter={() => setHoveredIndex(index)}
+        onMouseLeave={() => setHoveredIndex(null)}
+        className="group flex items-center justify-between border-b border-white/10 py-5 md:py-7 active:transition-none"
+        style={{ WebkitTapHighlightColor: 'transparent' }}
+      >
+        {/* City name */}
+        <span
+          className="font-headline italic select-none"
+          style={{
+            fontSize: 'clamp(2.25rem, 5.5vw, 4.5rem)',
+            lineHeight: 1,
+            color: '#fafaf9',
+            opacity: isOtherHovered ? 0.38 : 1,
+            transform: isThisHovered ? 'translateX(10px)' : 'translateX(0)',
+            transition: [
+              'opacity 220ms cubic-bezier(0.25, 1, 0.5, 1)',
+              'transform 280ms cubic-bezier(0.25, 1, 0.5, 1)',
+            ].join(', '),
+          }}
+        >
           {name}
         </span>
-        <span className="text-sm font-label uppercase tracking-wider text-stone-400 mt-2">
-          {region} · {currency}
-        </span>
-      </div>
-      <span
-        className={[
-          'material-symbols-outlined text-stone-400 text-3xl font-light select-none',
-          'transition-[color,transform] duration-150',
-          'group-hover:text-stone-50 group-hover:translate-x-1',
-        ].join(' ')}
-        style={{ transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)' }}
-      >
-        arrow_forward
-      </span>
-    </Link>
+
+        {/* Metadata + arrow */}
+        <div
+          className="flex items-center gap-4 md:gap-6 shrink-0"
+          style={{
+            opacity: isOtherHovered ? 0.28 : isThisHovered ? 1 : 0.7,
+            transition: 'opacity 220ms cubic-bezier(0.25, 1, 0.5, 1)',
+          }}
+        >
+          <span className="hidden sm:block text-[10px] font-label uppercase tracking-widest text-stone-400">
+            {region} · {currency}
+          </span>
+          <span
+            className="material-symbols-outlined font-light select-none text-stone-300"
+            style={{
+              fontSize: '20px',
+              transform: isThisHovered ? 'translateX(5px)' : 'translateX(0)',
+              transition: 'transform 250ms cubic-bezier(0.25, 1, 0.5, 1)',
+            }}
+          >
+            arrow_forward
+          </span>
+        </div>
+      </Link>
+    </motion.div>
   )
 }
 
 export default function Landing() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
-      {/* Full-bleed background */}
+    <div className="min-h-dvh flex flex-col relative overflow-x-hidden">
+      {/* Full-bleed photo background */}
       <div className="absolute inset-0 z-0">
         <img
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe_MMdhrexQ3QYWfC1riD9Wu6yJxcnV6Emky2zT77YFWB-8yEF1hJLiFHIN7EkIoPvETreNDxVxcLsZ27Q3HbKv2eeKzHX3beFFSbEkpVYownp5rON59-O2TeXPru93ld1T1ajqYvhfKw3nEIONem2TYorHFXfacEf2l2D6QHBp3uX99zNB4c8X8lS_RH98e744qTuVh59qwZDGAytJMjikE1GG9cb0LKtGmMzCHsGusDsminpCXHU9YZiuhc2SSNIDVCae0DJXMg"
           alt=""
           className="w-full h-full object-cover"
         />
+        {/* Warm duotone overlay: multiply darkens + tints warm */}
         <div className="absolute inset-0 bg-stone-900/60 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-950/90" />
+        {/* Gradient: transparent at top, deep at bottom for text legibility */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(12,10,9,0.15) 0%, rgba(12,10,9,0.1) 35%, rgba(12,10,9,0.75) 70%, rgba(12,10,9,0.97) 100%)',
+          }}
+        />
       </div>
 
-      {/* Navigation */}
-      <header className="relative z-10 w-full px-8 py-6 max-w-7xl mx-auto flex justify-between items-center">
-        <div className="text-2xl font-headline italic tracking-wide text-stone-50">
+      {/* Nav — fades in on load */}
+      <motion.header
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+        className="relative z-10 w-full px-8 md:px-12 lg:px-16 pt-7 pb-0 max-w-7xl mx-auto"
+      >
+        <span className="text-[11px] font-label uppercase tracking-[0.2em] text-stone-300/60 select-none">
           Threshold
-        </div>
-      </header>
+        </span>
+      </motion.header>
 
-      {/* Main content */}
-      <main className="relative z-10 flex-grow flex flex-col items-center justify-center px-6 py-24 md:py-32 w-full max-w-7xl mx-auto">
-        {/* Hero copy */}
-        <div className="text-center mb-28 md:mb-36 space-y-6 max-w-3xl">
-          <h1 className="text-5xl md:text-7xl font-headline text-stone-50 tracking-tight leading-tight">
-            The real cost of{' '}
-            <br className="hidden md:block" />
-            <span className="italic text-stone-300">moving out</span>
+      {/* Main — bottom-anchored; pt-24 guarantees gap below the THRESHOLD label */}
+      <main className="relative z-10 flex-grow flex flex-col justify-end px-8 md:px-12 lg:px-16 pt-24 md:pt-32 pb-8 md:pb-10 w-full max-w-7xl mx-auto">
+        {/* Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 260,
+            damping: 28,
+            delay: 0.08,
+          }}
+          className="mb-10 md:mb-14"
+        >
+          <h1
+            className="font-headline text-stone-50 tracking-tight"
+            style={{
+              fontSize: 'clamp(3.25rem, 9vw, 8.5rem)',
+              lineHeight: 0.91,
+              letterSpacing: '-0.025em',
+            }}
+          >
+            The real cost of
+            <br />
+            <span className="italic text-stone-300/90">moving out.</span>
           </h1>
-          <p className="text-base md:text-lg font-body text-stone-300 max-w-xl mx-auto leading-relaxed">
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.38, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+            className="mt-7 md:mt-9 text-sm md:text-base font-body text-stone-400/80 max-w-sm md:max-w-md leading-relaxed"
+          >
             Select a city to see exactly what independent living costs — upfront
             and every month.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        {/* City selection cards — staggered entrance */}
-        <div className="w-full flex flex-col md:flex-row justify-center gap-6 md:gap-8">
-          <CityCard name="London"  region="England"      currency="GBP" to="/london" staggerClass="card-stagger-1" />
-          <CityCard name="Basel"   region="Switzerland"  currency="CHF" to="/basel"  staggerClass="card-stagger-2" />
-          <CityCard name="Zurich"  region="Switzerland"  currency="CHF" to="/zurich" staggerClass="card-stagger-3" />
+        {/* City rows */}
+        <div className="border-t border-white/10">
+          {CITIES.map((city, i) => (
+            <CityRow
+              key={city.name}
+              {...city}
+              index={i}
+              hoveredIndex={hoveredIndex}
+              setHoveredIndex={setHoveredIndex}
+            />
+          ))}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 w-full flex flex-col md:flex-row items-center px-12 py-12 max-w-7xl mx-auto border-t border-stone-200/10 mt-auto">
-        <div className="text-lg font-headline text-stone-50 mb-4 md:mb-0 w-full md:w-1/3">
-          Threshold
-        </div>
-        <div className="text-[10px] font-label uppercase tracking-widest text-stone-400/40 text-center w-full md:w-1/3">
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.0, duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+        className="relative z-10 w-full flex items-center justify-between px-8 md:px-12 lg:px-16 py-6 max-w-7xl mx-auto"
+      >
+        <span className="text-base font-headline italic text-stone-50/30">Threshold</span>
+        <p className="text-[10px] font-label uppercase tracking-widest text-stone-400/55">
           Cost data last updated per city · Not financial advice
-        </div>
-        <div className="w-full md:w-1/3" />
-      </footer>
+        </p>
+      </motion.footer>
     </div>
   )
 }

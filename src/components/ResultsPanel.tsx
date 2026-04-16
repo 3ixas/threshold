@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import type { MonthlyCosts, UpfrontCosts, Currency } from '../lib/types'
 
 interface Props {
@@ -42,14 +43,23 @@ interface TotalBlockProps {
 }
 
 function TotalBlock({ label, value, currency, testId }: TotalBlockProps) {
+  const rounded = Math.round(value)
   return (
-    <div className="total-block bg-surface-container-low px-5 py-5 mb-4">
-      <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-2">
+    <div className="total-block bg-surface-container-low px-5 py-6 mb-4">
+      <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-3">
         {label}
       </p>
-      <p data-testid={testId} className="text-5xl font-headline tabular-nums text-on-surface leading-none">
+      {/* key=rounded ensures animation fires only when the displayed value changes */}
+      <motion.p
+        key={rounded}
+        data-testid={testId}
+        initial={{ opacity: 0.5, y: -5 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 600, damping: 38 }}
+        className="text-5xl md:text-6xl font-headline tabular-nums text-on-surface leading-none"
+      >
         {fmt(value, currency)}
-      </p>
+      </motion.p>
     </div>
   )
 }

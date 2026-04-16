@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { Link, useSearchParams } from 'react-router-dom'
 import london from '../data/london'
 import londonBoroughs from '../data/london-boroughs'
@@ -135,15 +136,20 @@ function LondonCalculator() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Nav */}
-      <header className="w-full px-8 py-5 border-b border-outline-variant/30 flex items-center gap-6 bg-background">
-        <Link to="/" className="text-xl font-headline italic text-on-surface tracking-wide">
+      <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
+        <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">
           Threshold
         </Link>
-        <span className="text-sm font-label uppercase tracking-wider text-on-surface-variant">
+        <span className="text-outline-variant/50 select-none">·</span>
+        <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
           London
         </span>
-        <Link to="/" className="ml-auto text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">
-          Change city
+        <Link
+          to="/"
+          className="ml-auto flex items-center gap-1 text-xs font-label uppercase tracking-widest text-on-surface-variant/60 hover:text-on-surface transition-colors duration-150"
+        >
+          <span className="material-symbols-outlined text-sm font-light leading-none" style={{ fontSize: '14px' }}>arrow_back</span>
+          Cities
         </Link>
       </header>
 
@@ -159,14 +165,19 @@ function LondonCalculator() {
         </div>
 
         {/* Right panel — 45%, scrollable */}
-        <div className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20">
+        <motion.div
+          className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20"
+          initial={{ opacity: 0, x: 16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 30, delay: 0.08 }}
+        >
           <div className="px-8 py-8 flex flex-col gap-6">
             {/* District heading */}
             <div>
-              <h1 className="text-2xl font-headline text-on-surface">
+              <h1 className="text-2xl md:text-3xl font-headline text-on-surface leading-tight">
                 {currentDistrict?.name ?? 'Select a borough'}
               </h1>
-              <p className="text-xs font-label uppercase tracking-wider text-on-surface-variant mt-1">
+              <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mt-1.5">
                 London · GBP
               </p>
             </div>
@@ -212,7 +223,7 @@ function LondonCalculator() {
                 <button
                   type="button"
                   onClick={enterComparison}
-                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.97] active:transition-none"
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.96] active:transition-none"
                 >
                   Compare two scenarios
                 </button>
@@ -253,7 +264,7 @@ function LondonCalculator() {
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   )
@@ -334,10 +345,17 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="w-full px-8 py-5 border-b border-outline-variant/30 flex items-center gap-6 bg-background">
-        <Link to="/" className="text-xl font-headline italic text-on-surface tracking-wide">Threshold</Link>
-        <span className="text-sm font-label uppercase tracking-wider text-on-surface-variant">{config.name}</span>
-        <Link to="/" className="ml-auto text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">Change city</Link>
+      <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
+        <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">Threshold</Link>
+        <span className="text-outline-variant/50 select-none">·</span>
+        <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{config.name}</span>
+        <Link
+          to="/"
+          className="ml-auto flex items-center gap-1 text-xs font-label uppercase tracking-widest text-on-surface-variant/60 hover:text-on-surface transition-colors duration-150"
+        >
+          <span className="material-symbols-outlined font-light" style={{ fontSize: '14px' }}>arrow_back</span>
+          Cities
+        </Link>
       </header>
 
       <div className="flex-1 flex flex-col md:flex-row min-h-0">
@@ -345,13 +363,18 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
           <DistrictMap geojson={geojson as Parameters<typeof DistrictMap>[0]['geojson']} selectedCode={selectedCode} onSelect={handleMapSelect} />
         </div>
 
-        <div className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20">
+        <motion.div
+          className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20"
+          initial={{ opacity: 0, x: 16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 30, delay: 0.08 }}
+        >
           <div className="px-8 py-8 flex flex-col gap-6">
             <div>
-              <h1 className="text-2xl font-headline text-on-surface">
+              <h1 className="text-2xl md:text-3xl font-headline text-on-surface leading-tight">
                 {currentDistrict?.name ?? 'Select a district'}
               </h1>
-              <p className="text-xs font-label uppercase tracking-wider text-on-surface-variant mt-1">
+              <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mt-1.5">
                 {config.name} · {currency}
               </p>
             </div>
@@ -383,7 +406,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
                   depositNote="Must be held in a blocked bank account in your name (Art. 257e CO)"
                 />
                 <button type="button" onClick={enterComparison}
-                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.97] active:transition-none">
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.96] active:transition-none">
                   Compare two scenarios
                 </button>
               </div>
@@ -407,7 +430,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   )
