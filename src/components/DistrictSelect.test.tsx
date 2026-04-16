@@ -55,4 +55,14 @@ describe('DistrictSelect', () => {
     })
     expect(onZoneChange).toHaveBeenCalledWith(4)
   })
+
+  it('hides the zone select when showZone is false', () => {
+    render(<DistrictSelect {...defaultProps} showZone={false} />)
+    expect(screen.queryByLabelText(/zone/i)).not.toBeInTheDocument()
+  })
+
+  it('shows the zone select by default', () => {
+    render(<DistrictSelect {...defaultProps} />)
+    expect(screen.getByLabelText(/zone/i)).toBeInTheDocument()
+  })
 })

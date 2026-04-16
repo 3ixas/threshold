@@ -5,6 +5,8 @@ interface Props {
   upfront: UpfrontCosts
   currency: Currency
   lastUpdated: string
+  /** Optional note shown under the security deposit line (e.g. Swiss blocked account requirement) */
+  depositNote?: string
 }
 
 const symbol: Record<Currency, string> = { GBP: '£', CHF: 'CHF ' }
@@ -34,7 +36,7 @@ function LineItem({ label, value, currency, testId, muted }: LineItemProps) {
   )
 }
 
-export default function ResultsPanel({ monthly, upfront, currency, lastUpdated }: Props) {
+export default function ResultsPanel({ monthly, upfront, currency, lastUpdated, depositNote }: Props) {
   return (
     <div className="flex flex-col gap-10">
       {/* ── Upfront section ─────────────────────── */}
@@ -47,6 +49,9 @@ export default function ResultsPanel({ monthly, upfront, currency, lastUpdated }
         </p>
         <div className="border-t border-outline-variant/20">
           <LineItem label="Security deposit" value={upfront.securityDeposit} currency={currency} testId="line-securityDeposit" muted />
+          {depositNote && (
+            <p className="text-[10px] font-body text-on-surface-variant/60 pb-1 -mt-1">{depositNote}</p>
+          )}
           <LineItem label="First month's rent" value={upfront.firstMonthRent} currency={currency} testId="line-firstMonthRent" muted />
           <LineItem label="Moving costs" value={upfront.movingCosts} currency={currency} testId="line-movingCosts" muted />
           <LineItem label="Furniture & setup" value={upfront.furnitureBudget} currency={currency} testId="line-furnitureBudget" muted />

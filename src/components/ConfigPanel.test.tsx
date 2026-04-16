@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import ConfigPanel from './ConfigPanel'
 import london from '../data/london'
+import basel from '../data/basel'
 import type { CalculatorInputs } from '../lib/types'
 
 const baseInputs: CalculatorInputs = {
@@ -45,5 +46,24 @@ describe('ConfigPanel', () => {
     render(<ConfigPanel config={london} inputs={baseInputs} onChange={() => {}} />)
     fireEvent.click(screen.getByText(/lifestyle costs/i))
     expect(screen.getByLabelText(/gym/i)).toBeInTheDocument()
+  })
+
+  it('does not show health insurance field for London', () => {
+    render(<ConfigPanel config={london} inputs={baseInputs} onChange={() => {}} />)
+    expect(screen.queryByLabelText(/krankenkasse/i)).not.toBeInTheDocument()
+  })
+
+  it('shows health insurance field for Basel', () => {
+    const baselInputs: CalculatorInputs = { ...baseInputs, districtId: 'iselin' }
+    render(<ConfigPanel config={basel} inputs={baselInputs} onChange={() => {}} />)
+    expect(screen.getByLabelText(/krankenkasse/i)).toBeInTheDocument()
+  })
+
+  it('calls onChange with healthInsuranceOverride when health insurance input changes', () => {
+    const onChange = vi.fn()
+    const baselInputs: CalculatorInputs = { ...baseInputs, districtId: 'iselin' }
+    render(<ConfigPanel config={basel} inputs={baselInputs} onChange={onChange} />)
+    fireEvent.change(screen.getByLabelText(/krankenkasse/i), { target: { value: '380' } })
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ healthInsuranceOverride: 380 }))
   })
 })

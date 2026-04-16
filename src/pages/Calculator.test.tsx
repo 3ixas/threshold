@@ -11,14 +11,12 @@ function renderCalculator(city: 'london' | 'basel' | 'zurich', search = '') {
 }
 
 describe('Calculator — London', () => {
-  it('renders a district heading (defaults to first district in config)', () => {
+  it('renders a district heading', () => {
     renderCalculator('london')
-    // Default district is Barking & Dagenham (first in london.districts after deserialise fallback)
-    // or whichever the first district is — just check a heading exists
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
   })
 
-  it('shows the borough and zone selects', () => {
+  it('shows the borough and TfL zone selects', () => {
     renderCalculator('london')
     expect(screen.getByLabelText(/borough/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/zone/i)).toBeInTheDocument()
@@ -28,14 +26,58 @@ describe('Calculator — London', () => {
     renderCalculator('london', '?district=camden&type=1bed&people=1')
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Camden')
   })
+
+  it('does not show health insurance input', () => {
+    renderCalculator('london')
+    expect(screen.queryByLabelText(/krankenkasse/i)).not.toBeInTheDocument()
+  })
 })
 
-describe('Calculator — stubs', () => {
-  it.each([
-    ['basel', 'Basel'],
-    ['zurich', 'Zurich'],
-  ] as const)('renders %s stub with city name', (city, label) => {
-    renderCalculator(city)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(label)
+describe('Calculator — Basel', () => {
+  it('renders a district heading', () => {
+    renderCalculator('basel')
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+  })
+
+  it('shows the district dropdown', () => {
+    renderCalculator('basel')
+    expect(screen.getByLabelText(/borough/i)).toBeInTheDocument()
+  })
+
+  it('does not show TfL zone select', () => {
+    renderCalculator('basel')
+    expect(screen.queryByLabelText(/zone/i)).not.toBeInTheDocument()
+  })
+
+  it('shows health insurance (Krankenkasse) input', () => {
+    renderCalculator('basel')
+    expect(screen.getByLabelText(/krankenkasse/i)).toBeInTheDocument()
+  })
+
+  it('restores district from URL params', () => {
+    renderCalculator('basel', '?district=bruderholz&type=1bed&people=1')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Bruderholz')
+  })
+})
+
+describe('Calculator — Zurich', () => {
+  it('renders a district heading', () => {
+    renderCalculator('zurich')
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+  })
+
+  it('shows health insurance input', () => {
+    renderCalculator('zurich')
+    expect(screen.getByLabelText(/krankenkasse/i)).toBeInTheDocument()
+  })
+
+  it('does not show TfL zone select', () => {
+    renderCalculator('zurich')
+    expect(screen.queryByLabelText(/zone/i)).not.toBeInTheDocument()
+  })
+
+  it('restores Kreis from URL params', () => {
+    renderCalculator('zurich', '?district=kreis-8&type=1bed&people=1')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Kreis 8')
   })
 })

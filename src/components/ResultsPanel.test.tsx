@@ -55,4 +55,14 @@ describe('ResultsPanel', () => {
     render(<ResultsPanel monthly={monthly} upfront={upfront} currency="GBP" lastUpdated="April 2026" />)
     expect(screen.getByText(/april 2026/i)).toBeInTheDocument()
   })
+
+  it('shows a deposit note when depositNote prop is provided', () => {
+    render(<ResultsPanel monthly={monthly} upfront={upfront} currency="GBP" lastUpdated="April 2026" depositNote="Must be held in a blocked bank account" />)
+    expect(screen.getByText(/blocked bank account/i)).toBeInTheDocument()
+  })
+
+  it('shows no deposit note when depositNote prop is omitted', () => {
+    render(<ResultsPanel monthly={monthly} upfront={upfront} currency="GBP" lastUpdated="April 2026" />)
+    expect(screen.queryByText(/blocked bank account/i)).not.toBeInTheDocument()
+  })
 })

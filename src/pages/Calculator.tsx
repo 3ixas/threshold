@@ -2,6 +2,10 @@ import { useCallback, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import london from '../data/london'
 import londonBoroughs from '../data/london-boroughs'
+import basel from '../data/basel'
+import baselWohnviertel from '../data/basel-wohnviertel'
+import zurich from '../data/zurich'
+import zurichKreise from '../data/zurich-kreise'
 import { useCalculatorState } from '../lib/useCalculatorState'
 import { calculateUpfront, calculateMonthly } from '../lib/calculate'
 import { getDistrictById, getZoneForDistrict, getBoroughBounds } from '../lib/districts'
@@ -17,7 +21,8 @@ import ScenarioBConfig from '../components/ScenarioBConfig'
 import ComparisonResults from '../components/ComparisonResults'
 import { calculateAffordability } from '../lib/affordability'
 import { generateSuggestions } from '../lib/suggestions'
-import type { CalculatorInputs } from '../lib/types'
+import type { CalculatorInputs, CityConfig } from '../lib/types'
+import type { FeatureCollection, Polygon, MultiPolygon } from 'geojson'
 
 interface CalculatorProps {
   city: 'london' | 'basel' | 'zurich'
@@ -254,22 +259,155 @@ function LondonCalculator() {
   )
 }
 
-// ── Stubs for Basel / Zurich ─────────────────────────────────────
+// ── Swiss calculator (Basel + Zurich) ────────────────────────────
 
-const cityLabels: Record<CalculatorProps['city'], string> = {
-  london: 'London',
-  basel: 'Basel',
-  zurich: 'Zurich',
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SwissGeoJSON = FeatureCollection<Polygon | MultiPolygon, any>
+
+interface SwissCalculatorProps {
+  config: CityConfig
+  geojson: SwissGeoJSON
 }
 
-function StubCalculator({ city }: CalculatorProps) {
+function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
+  const [inputs, setInputs] = useCalculatorState(config)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const monthly = useMemo(() => calculateMonthly(config, inputs), [config, inputs])
+  const upfront = useMemo(() => calculateUpfront(config, inputs), [config, inputs])
+  const suggestions = useMemo(() => generateSuggestions(inputs, config), [inputs, config])
+
+  const inComparisonMode = useMemo(() => hasScenarioB(searchParams), [searchParams])
+
+  const scenarioBInputs = useMemo(
+    () => inComparisonMode ? deserialiseScenarioB(searchParams, config) : null,
+    [searchParams, inComparisonMode, config]
+  )
+  const monthlyB = useMemo(
+    () => scenarioBInputs ? calculateMonthly(config, scenarioBInputs) : null,
+    [scenarioBInputs, config]
+  )
+  const upfrontB = useMemo(
+    () => scenarioBInputs ? calculateUpfront(config, scenarioBInputs) : null,
+    [scenarioBInputs, config]
+  )
+
+  const affordability = useMemo(() => {
+    if (!inputs.takeHome) return null
+    return calculateAffordability({
+      takeHome: inputs.takeHome,
+      savings: inputs.savings ?? 0,
+      monthlyTotal: monthly.total,
+      upfrontTotal: upfront.total,
+    })
+  }, [inputs.takeHome, inputs.savings, monthly.total, upfront.total])
+
+  // For Swiss cities, GeoJSON code === districtId — direct 1:1 mapping
+  const selectedCode = inputs.districtId
+
+  const handleMapSelect = useCallback((code: string) => {
+    setInputs({ ...inputs, districtId: code })
+  }, [inputs, setInputs])
+
+  const handleDistrictChange = useCallback((districtId: string) => {
+    setInputs({ ...inputs, districtId })
+  }, [inputs, setInputs])
+
+  const enterComparison = useCallback(() => {
+    const aParams = serialise(inputs)
+    const bParams = serialiseScenarioB({ ...inputs })
+    setSearchParams(mergeScenariosIntoParams(aParams, bParams), { replace: true })
+  }, [inputs, setSearchParams])
+
+  const exitComparison = useCallback(() => {
+    setSearchParams(serialise(deserialise(searchParams, config)), { replace: true })
+  }, [searchParams, config, setSearchParams])
+
+  const setScenarioB = useCallback((updated: CalculatorInputs) => {
+    const aParams = serialise(inputs)
+    const bParams = serialiseScenarioB(updated)
+    setSearchParams(mergeScenariosIntoParams(aParams, bParams), { replace: true })
+  }, [inputs, setSearchParams])
+
+  const currentDistrict = getDistrictById(config, inputs.districtId)
+  const currency = config.currency
+
   return (
-    <div className="min-h-screen bg-background text-on-background flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-headline">{cityLabels[city]}</h1>
-        <p className="text-sm font-label uppercase tracking-wider text-on-surface-variant">
-          Calculator — coming soon
-        </p>
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="w-full px-8 py-5 border-b border-outline-variant/30 flex items-center gap-6 bg-background">
+        <Link to="/" className="text-xl font-headline italic text-on-surface tracking-wide">Threshold</Link>
+        <span className="text-sm font-label uppercase tracking-wider text-on-surface-variant">{config.name}</span>
+        <Link to="/" className="ml-auto text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">Change city</Link>
+      </header>
+
+      <div className="flex-1 flex flex-col md:flex-row min-h-0">
+        <div className="w-full md:w-[55%] h-[45vh] md:h-auto relative">
+          <DistrictMap geojson={geojson as Parameters<typeof DistrictMap>[0]['geojson']} selectedCode={selectedCode} onSelect={handleMapSelect} />
+        </div>
+
+        <div className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20">
+          <div className="px-8 py-8 flex flex-col gap-8">
+            <div>
+              <h1 className="text-2xl font-headline text-on-surface">
+                {currentDistrict?.name ?? 'Select a district'}
+              </h1>
+              <p className="text-xs font-label uppercase tracking-wider text-on-surface-variant mt-1">
+                {config.name} · {currency}
+              </p>
+            </div>
+
+            <DistrictSelect
+              config={config}
+              districtId={inputs.districtId}
+              tflZone={1}
+              onDistrictChange={handleDistrictChange}
+              onZoneChange={() => {}}
+              showZone={false}
+            />
+
+            <div className="border-t border-outline-variant/20 pt-6">
+              <ConfigPanel config={config} inputs={inputs} onChange={setInputs} />
+            </div>
+
+            {suggestions.length > 0 && !inComparisonMode && (
+              <div className="border-t border-outline-variant/20 pt-6">
+                <SuggestionsPanel suggestions={suggestions} currency={currency} onApply={setInputs} />
+              </div>
+            )}
+
+            {!inComparisonMode && (
+              <div className="border-t border-outline-variant/20 pt-6">
+                <ResultsPanel
+                  monthly={monthly} upfront={upfront} currency={currency}
+                  lastUpdated="April 2026"
+                  depositNote="Must be held in a blocked bank account in your name (Art. 257e CO)"
+                />
+                <button type="button" onClick={enterComparison}
+                  className="mt-6 w-full py-2 border border-outline-variant text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface hover:border-primary transition-all">
+                  Compare scenarios
+                </button>
+              </div>
+            )}
+
+            {inComparisonMode && scenarioBInputs && monthlyB && upfrontB && (
+              <div className="border-t border-outline-variant/20 pt-6 flex flex-col gap-6">
+                <ScenarioBConfig config={config} inputs={scenarioBInputs} onChange={setScenarioB} onExit={exitComparison} />
+                <ComparisonResults monthlyA={monthly} monthlyB={monthlyB} upfrontA={upfront} upfrontB={upfrontB} currency={currency} />
+              </div>
+            )}
+
+            {!inComparisonMode && (
+              <div className="border-t border-outline-variant/20 pt-6">
+                <AffordabilityPanel
+                  takeHome={inputs.takeHome ?? 0} savings={inputs.savings ?? 0}
+                  result={affordability} currency={currency} cityId={config.id}
+                  onTakeHomeChange={v => setInputs({ ...inputs, takeHome: v || undefined })}
+                  onSavingsChange={v => setInputs({ ...inputs, savings: v || undefined })}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -277,5 +415,6 @@ function StubCalculator({ city }: CalculatorProps) {
 
 export default function Calculator({ city }: CalculatorProps) {
   if (city === 'london') return <LondonCalculator />
-  return <StubCalculator city={city} />
+  if (city === 'basel') return <SwissCalculator config={basel} geojson={baselWohnviertel} />
+  return <SwissCalculator config={zurich} geojson={zurichKreise} />
 }

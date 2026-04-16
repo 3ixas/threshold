@@ -123,6 +123,17 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
         onChange={v => set({ broadbandOverride: v })}
       />
 
+      {/* Health insurance — Swiss cities only */}
+      {d.healthInsurance !== undefined && (
+        <NumberInput
+          label="Krankenkasse estimate"
+          id="krankenkasse"
+          value={inputs.healthInsuranceOverride ?? d.healthInsurance}
+          prefix="CHF "
+          onChange={v => set({ healthInsuranceOverride: v })}
+        />
+      )}
+
       {/* Lifestyle costs — collapsible */}
       <div>
         <button

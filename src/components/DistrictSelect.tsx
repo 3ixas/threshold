@@ -8,6 +8,8 @@ interface Props {
   tflZone: number
   onDistrictChange: (districtId: string) => void
   onZoneChange: (zone: number) => void
+  /** Whether to show the TfL zone override select. Defaults to true. */
+  showZone?: boolean
 }
 
 export default function DistrictSelect({
@@ -16,6 +18,7 @@ export default function DistrictSelect({
   tflZone,
   onDistrictChange,
   onZoneChange,
+  showZone = true,
 }: Props) {
   return (
     <div className="flex flex-col gap-4">
@@ -37,7 +40,7 @@ export default function DistrictSelect({
         </select>
       </div>
 
-      <div className="flex flex-col gap-1">
+      {showZone && <div className="flex flex-col gap-1">
         <label htmlFor="zone-select" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
           TfL Zone
         </label>
@@ -53,7 +56,7 @@ export default function DistrictSelect({
             </option>
           ))}
         </select>
-      </div>
+      </div>}
     </div>
   )
 }
