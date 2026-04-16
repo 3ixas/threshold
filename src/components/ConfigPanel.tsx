@@ -11,10 +11,9 @@ const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
 
 const ARRANGEMENTS: { value: 1 | 2 | 3 | 4; label: string }[] = [
   { value: 1, label: 'Just me' },
-  { value: 2, label: 'With a partner' },
-  { value: 2, label: 'With 1 flatmate' },
-  { value: 3, label: 'With 2 flatmates' },
-  { value: 4, label: 'With 3 flatmates' },
+  { value: 2, label: 'With 1 other' },
+  { value: 3, label: 'With 2 others' },
+  { value: 4, label: 'With 3 others' },
 ]
 
 interface Props {
