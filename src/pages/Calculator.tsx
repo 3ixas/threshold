@@ -160,7 +160,7 @@ function LondonCalculator() {
 
         {/* Right panel — 45%, scrollable */}
         <div className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20">
-          <div className="px-8 py-8 flex flex-col gap-8">
+          <div className="px-8 py-8 flex flex-col gap-6">
             {/* District heading */}
             <div>
               <h1 className="text-2xl font-headline text-on-surface">
@@ -181,7 +181,7 @@ function LondonCalculator() {
             />
 
             {/* Configuration panel */}
-            <div className="border-t border-outline-variant/20 pt-6">
+            <div className="border-t border-outline-variant/20 pt-5">
               <ConfigPanel
                 config={london}
                 inputs={inputs}
@@ -191,7 +191,7 @@ function LondonCalculator() {
 
             {/* What-if suggestions */}
             {suggestions.length > 0 && !inComparisonMode && (
-              <div className="border-t border-outline-variant/20 pt-6">
+              <div className="border-t border-outline-variant/20 pt-5">
                 <SuggestionsPanel
                   suggestions={suggestions}
                   currency="GBP"
@@ -202,7 +202,7 @@ function LondonCalculator() {
 
             {/* Results (single scenario) */}
             {!inComparisonMode && (
-              <div className="border-t border-outline-variant/20 pt-6">
+              <div className="border-t border-outline-variant/20 pt-5">
                 <ResultsPanel
                   monthly={monthly}
                   upfront={upfront}
@@ -212,16 +212,16 @@ function LondonCalculator() {
                 <button
                   type="button"
                   onClick={enterComparison}
-                  className="mt-6 w-full py-2 border border-outline-variant text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface hover:border-primary transition-all"
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-300"
                 >
-                  Compare scenarios
+                  Compare two scenarios
                 </button>
               </div>
             )}
 
             {/* Comparison mode */}
             {inComparisonMode && scenarioBInputs && monthlyB && upfrontB && (
-              <div className="border-t border-outline-variant/20 pt-6 flex flex-col gap-6">
+              <div className="border-t border-outline-variant/20 pt-5 flex flex-col gap-6">
                 <ScenarioBConfig
                   config={london}
                   inputs={scenarioBInputs}
@@ -240,7 +240,7 @@ function LondonCalculator() {
 
             {/* Affordability layer (single scenario only) */}
             {!inComparisonMode && (
-              <div className="border-t border-outline-variant/20 pt-6">
+              <div className="border-t border-outline-variant/20 pt-5">
                 <AffordabilityPanel
                   takeHome={inputs.takeHome ?? 0}
                   savings={inputs.savings ?? 0}
@@ -346,7 +346,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
         </div>
 
         <div className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20">
-          <div className="px-8 py-8 flex flex-col gap-8">
+          <div className="px-8 py-8 flex flex-col gap-6">
             <div>
               <h1 className="text-2xl font-headline text-on-surface">
                 {currentDistrict?.name ?? 'Select a district'}
@@ -365,39 +365,39 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
               showZone={false}
             />
 
-            <div className="border-t border-outline-variant/20 pt-6">
+            <div className="border-t border-outline-variant/20 pt-5">
               <ConfigPanel config={config} inputs={inputs} onChange={setInputs} />
             </div>
 
             {suggestions.length > 0 && !inComparisonMode && (
-              <div className="border-t border-outline-variant/20 pt-6">
+              <div className="border-t border-outline-variant/20 pt-5">
                 <SuggestionsPanel suggestions={suggestions} currency={currency} onApply={setInputs} />
               </div>
             )}
 
             {!inComparisonMode && (
-              <div className="border-t border-outline-variant/20 pt-6">
+              <div className="border-t border-outline-variant/20 pt-5">
                 <ResultsPanel
                   monthly={monthly} upfront={upfront} currency={currency}
                   lastUpdated="April 2026"
                   depositNote="Must be held in a blocked bank account in your name (Art. 257e CO)"
                 />
                 <button type="button" onClick={enterComparison}
-                  className="mt-6 w-full py-2 border border-outline-variant text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface hover:border-primary transition-all">
-                  Compare scenarios
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-300">
+                  Compare two scenarios
                 </button>
               </div>
             )}
 
             {inComparisonMode && scenarioBInputs && monthlyB && upfrontB && (
-              <div className="border-t border-outline-variant/20 pt-6 flex flex-col gap-6">
+              <div className="border-t border-outline-variant/20 pt-5 flex flex-col gap-6">
                 <ScenarioBConfig config={config} inputs={scenarioBInputs} onChange={setScenarioB} onExit={exitComparison} />
                 <ComparisonResults monthlyA={monthly} monthlyB={monthlyB} upfrontA={upfront} upfrontB={upfrontB} currency={currency} />
               </div>
             )}
 
             {!inComparisonMode && (
-              <div className="border-t border-outline-variant/20 pt-6">
+              <div className="border-t border-outline-variant/20 pt-5">
                 <AffordabilityPanel
                   takeHome={inputs.takeHome ?? 0} savings={inputs.savings ?? 0}
                   result={affordability} currency={currency} cityId={config.id}

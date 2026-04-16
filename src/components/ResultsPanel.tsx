@@ -5,7 +5,6 @@ interface Props {
   upfront: UpfrontCosts
   currency: Currency
   lastUpdated: string
-  /** Optional note shown under the security deposit line (e.g. Swiss blocked account requirement) */
   depositNote?: string
 }
 
@@ -20,79 +19,87 @@ interface LineItemProps {
   value: number
   currency: Currency
   testId: string
-  muted?: boolean
 }
 
-function LineItem({ label, value, currency, testId, muted }: LineItemProps) {
+function LineItem({ label, value, currency, testId }: LineItemProps) {
   return (
-    <div className="flex justify-between items-baseline py-2">
-      <span className={`text-sm font-label uppercase tracking-wider ${muted ? 'text-on-surface-variant' : 'text-on-surface'}`}>
+    <div className="flex justify-between items-baseline py-2.5">
+      <span className="text-sm font-label uppercase tracking-wider text-on-surface-variant">
         {label}
       </span>
-      <span data-testid={testId} className="text-sm font-body tabular-nums text-on-surface">
+      <span data-testid={testId} className="text-sm font-body tabular-nums text-on-surface-variant">
         {fmt(value, currency)}
       </span>
     </div>
   )
 }
 
+interface TotalBlockProps {
+  label: string
+  value: number
+  currency: Currency
+  testId: string
+}
+
+function TotalBlock({ label, value, currency, testId }: TotalBlockProps) {
+  return (
+    <div className="bg-surface-container-low px-5 py-5 mb-4">
+      <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-2">
+        {label}
+      </p>
+      <p data-testid={testId} className="text-5xl font-headline tabular-nums text-on-surface leading-none">
+        {fmt(value, currency)}
+      </p>
+    </div>
+  )
+}
+
 export default function ResultsPanel({ monthly, upfront, currency, lastUpdated, depositNote }: Props) {
   return (
-    <div className="flex flex-col gap-10">
-      {/* ── Upfront section ─────────────────────── */}
+    <div className="flex flex-col gap-8">
+      {/* ── Upfront ───────────────────────────────── */}
       <section>
-        <p className="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-2">
-          Total upfront
-        </p>
-        <p data-testid="upfront-total" className="text-4xl font-headline text-on-surface mb-6">
-          {fmt(upfront.total, currency)}
-        </p>
-        <div className="border-t border-outline-variant/20">
-          <LineItem label="Security deposit" value={upfront.securityDeposit} currency={currency} testId="line-securityDeposit" muted />
+        <TotalBlock label="Total upfront" value={upfront.total} currency={currency} testId="upfront-total" />
+        <div className="divide-y divide-outline-variant/15">
+          <LineItem label="Security deposit" value={upfront.securityDeposit} currency={currency} testId="line-securityDeposit" />
           {depositNote && (
-            <p className="text-[10px] font-body text-on-surface-variant/60 pb-1 -mt-1">{depositNote}</p>
+            <p className="text-[10px] font-body text-on-surface-variant/50 pb-2 pt-0.5">{depositNote}</p>
           )}
-          <LineItem label="First month's rent" value={upfront.firstMonthRent} currency={currency} testId="line-firstMonthRent" muted />
-          <LineItem label="Moving costs" value={upfront.movingCosts} currency={currency} testId="line-movingCosts" muted />
-          <LineItem label="Furniture & setup" value={upfront.furnitureBudget} currency={currency} testId="line-furnitureBudget" muted />
+          <LineItem label="First month's rent" value={upfront.firstMonthRent} currency={currency} testId="line-firstMonthRent" />
+          <LineItem label="Moving costs" value={upfront.movingCosts} currency={currency} testId="line-movingCosts" />
+          <LineItem label="Furniture & setup" value={upfront.furnitureBudget} currency={currency} testId="line-furnitureBudget" />
         </div>
       </section>
 
-      {/* ── Monthly section ──────────────────────── */}
+      {/* ── Monthly ───────────────────────────────── */}
       <section>
-        <p className="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-2">
-          Total monthly
-        </p>
-        <p data-testid="monthly-total" className="text-4xl font-headline text-on-surface mb-6">
-          {fmt(monthly.total, currency)}
-        </p>
-        <div className="border-t border-outline-variant/20">
-          <LineItem label="Rent" value={monthly.rent} currency={currency} testId="line-rent" muted />
+        <TotalBlock label="Total monthly" value={monthly.total} currency={currency} testId="monthly-total" />
+        <div className="divide-y divide-outline-variant/15">
+          <LineItem label="Rent" value={monthly.rent} currency={currency} testId="line-rent" />
           {monthly.councilTax > 0 && (
-            <LineItem label="Council tax" value={monthly.councilTax} currency={currency} testId="line-councilTax" muted />
+            <LineItem label="Council tax" value={monthly.councilTax} currency={currency} testId="line-councilTax" />
           )}
-          <LineItem label="Utilities" value={monthly.utilities} currency={currency} testId="line-utilities" muted />
-          <LineItem label="Broadband" value={monthly.broadband} currency={currency} testId="line-broadband" muted />
+          <LineItem label="Utilities" value={monthly.utilities} currency={currency} testId="line-utilities" />
+          <LineItem label="Broadband" value={monthly.broadband} currency={currency} testId="line-broadband" />
           {monthly.tvLicence > 0 && (
-            <LineItem label="TV licence" value={monthly.tvLicence} currency={currency} testId="line-tvLicence" muted />
+            <LineItem label="TV licence" value={monthly.tvLicence} currency={currency} testId="line-tvLicence" />
           )}
           {monthly.mediaFee > 0 && (
-            <LineItem label="Media fee (Serafe)" value={monthly.mediaFee} currency={currency} testId="line-mediaFee" muted />
+            <LineItem label="Media fee (Serafe)" value={monthly.mediaFee} currency={currency} testId="line-mediaFee" />
           )}
-          <LineItem label="Contents insurance" value={monthly.contentsInsurance} currency={currency} testId="line-contentsInsurance" muted />
-          <LineItem label="Transport" value={monthly.transport} currency={currency} testId="line-transport" muted />
-          <LineItem label="Food" value={monthly.food} currency={currency} testId="line-food" muted />
+          <LineItem label="Contents insurance" value={monthly.contentsInsurance} currency={currency} testId="line-contentsInsurance" />
+          <LineItem label="Transport" value={monthly.transport} currency={currency} testId="line-transport" />
+          <LineItem label="Food" value={monthly.food} currency={currency} testId="line-food" />
           {monthly.healthInsurance > 0 && (
-            <LineItem label="Health insurance" value={monthly.healthInsurance} currency={currency} testId="line-healthInsurance" muted />
+            <LineItem label="Health insurance" value={monthly.healthInsurance} currency={currency} testId="line-healthInsurance" />
           )}
           {monthly.lifestyle > 0 && (
-            <LineItem label="Lifestyle" value={monthly.lifestyle} currency={currency} testId="line-lifestyle" muted />
+            <LineItem label="Lifestyle" value={monthly.lifestyle} currency={currency} testId="line-lifestyle" />
           )}
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────── */}
-      <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">
+      <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/40">
         Cost data last updated: {lastUpdated}
       </p>
     </div>

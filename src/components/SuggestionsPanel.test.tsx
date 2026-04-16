@@ -31,10 +31,11 @@ describe('SuggestionsPanel', () => {
     expect(screen.getByText('Move to Lewisham')).toBeInTheDocument()
   })
 
-  it('displays the monthly saving on each chip', () => {
+  it('displays the monthly saving amount on each chip', () => {
     render(<SuggestionsPanel suggestions={suggestions} currency="GBP" onApply={() => {}} />)
-    expect(screen.getByText(/save £750/i)).toBeInTheDocument()
-    expect(screen.getByText(/save £400/i)).toBeInTheDocument()
+    // Saving is now rendered as a headline number "−£750" with a separate "/mo" label
+    expect(screen.getByText('−£750')).toBeInTheDocument()
+    expect(screen.getByText('−£400')).toBeInTheDocument()
   })
 
   it('calls onApply with the updated inputs when a chip is clicked', () => {
@@ -46,6 +47,6 @@ describe('SuggestionsPanel', () => {
 
   it('uses CHF prefix for Swiss currency', () => {
     render(<SuggestionsPanel suggestions={[suggestions[0]]} currency="CHF" onApply={() => {}} />)
-    expect(screen.getByText(/save CHF/i)).toBeInTheDocument()
+    expect(screen.getByText('−CHF 750')).toBeInTheDocument()
   })
 })

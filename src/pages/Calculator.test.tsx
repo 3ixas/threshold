@@ -39,9 +39,9 @@ describe('Calculator — Basel', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
   })
 
-  it('shows the district dropdown', () => {
+  it('shows the district dropdown (labelled District for Swiss cities)', () => {
     renderCalculator('basel')
-    expect(screen.getByLabelText(/borough/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/district/i)).toBeInTheDocument()
   })
 
   it('does not show TfL zone select', () => {

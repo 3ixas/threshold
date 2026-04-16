@@ -56,6 +56,7 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
   const [lifestyleOpen, setLifestyleOpen] = useState(false)
 
   const d = config.defaults
+  const prefix = config.currency === 'CHF' ? 'CHF ' : '£'
 
   const set = (patch: Partial<CalculatorInputs>) => onChange({ ...inputs, ...patch })
   const setLifestyle = (patch: Partial<CalculatorInputs['lifestyle']>) =>
@@ -101,24 +102,28 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
       <NumberInput
         label="Monthly food budget"
         id="food"
+        prefix={prefix}
         value={inputs.food ?? d.food}
         onChange={v => set({ food: v })}
       />
       <NumberInput
         label="Moving costs"
         id="moving-costs"
+        prefix={prefix}
         value={inputs.movingCostsOverride ?? d.movingCosts}
         onChange={v => set({ movingCostsOverride: v })}
       />
       <NumberInput
         label="Furniture & setup"
         id="furniture"
+        prefix={prefix}
         value={inputs.furnitureBudgetOverride ?? d.furnitureBudget}
         onChange={v => set({ furnitureBudgetOverride: v })}
       />
       <NumberInput
         label="Broadband"
         id="broadband"
+        prefix={prefix}
         value={inputs.broadbandOverride ?? d.broadband}
         onChange={v => set({ broadbandOverride: v })}
       />
@@ -147,12 +152,12 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
 
         {lifestyleOpen && (
           <div className="flex flex-col gap-4 pt-4">
-            <NumberInput label="Phone bill" id="phone" value={inputs.lifestyle.phone} onChange={v => setLifestyle({ phone: v })} />
-            <NumberInput label="Subscriptions" id="subscriptions" value={inputs.lifestyle.subscriptions} onChange={v => setLifestyle({ subscriptions: v })} />
-            <NumberInput label="Gym" id="gym" value={inputs.lifestyle.gym} onChange={v => setLifestyle({ gym: v })} />
-            <NumberInput label="Eating out" id="eating-out" value={inputs.lifestyle.eatingOut} onChange={v => setLifestyle({ eatingOut: v })} />
-            <NumberInput label="Personal care" id="personal-care" value={inputs.lifestyle.personalCare} onChange={v => setLifestyle({ personalCare: v })} />
-            <NumberInput label="Savings target" id="savings-target" value={inputs.lifestyle.savingsTarget} onChange={v => setLifestyle({ savingsTarget: v })} />
+            <NumberInput label="Phone bill" id="phone" prefix={prefix} value={inputs.lifestyle.phone} onChange={v => setLifestyle({ phone: v })} />
+            <NumberInput label="Subscriptions" id="subscriptions" prefix={prefix} value={inputs.lifestyle.subscriptions} onChange={v => setLifestyle({ subscriptions: v })} />
+            <NumberInput label="Gym" id="gym" prefix={prefix} value={inputs.lifestyle.gym} onChange={v => setLifestyle({ gym: v })} />
+            <NumberInput label="Eating out" id="eating-out" prefix={prefix} value={inputs.lifestyle.eatingOut} onChange={v => setLifestyle({ eatingOut: v })} />
+            <NumberInput label="Personal care" id="personal-care" prefix={prefix} value={inputs.lifestyle.personalCare} onChange={v => setLifestyle({ personalCare: v })} />
+            <NumberInput label="Savings target" id="savings-target" prefix={prefix} value={inputs.lifestyle.savingsTarget} onChange={v => setLifestyle({ savingsTarget: v })} />
           </div>
         )}
       </div>

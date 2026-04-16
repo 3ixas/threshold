@@ -57,7 +57,9 @@ describe('AffordabilityPanel', () => {
 
   it('shows CAN_AFFORD_NOW message when savings cover upfront', () => {
     render(<AffordabilityPanel {...baseProps} result={canAffordNow} />)
-    expect(screen.getByTestId('affordability-status')).toHaveTextContent(/can afford/i)
+    // CAN_AFFORD_NOW renders a "You can move in now" label + surplus hero number
+    expect(screen.getByTestId('affordability-status')).toBeInTheDocument()
+    expect(screen.getByText(/can move in now/i)).toBeInTheDocument()
   })
 
   it('shows months-to-move-in when status is NOT_YET', () => {
@@ -72,7 +74,9 @@ describe('AffordabilityPanel', () => {
 
   it('shows INCOME_INSUFFICIENT message when surplus ≤ 0', () => {
     render(<AffordabilityPanel {...baseProps} result={insufficient} />)
-    expect(screen.getByTestId('affordability-status')).toHaveTextContent(/income/i)
+    // INCOME_INSUFFICIENT renders a shortfall label + hero number
+    expect(screen.getByTestId('affordability-status')).toBeInTheDocument()
+    expect(screen.getByText(/income insufficient/i)).toBeInTheDocument()
   })
 
   it('does not show months-to-move-in when income is insufficient', () => {

@@ -10,6 +10,8 @@ interface Props {
   onZoneChange: (zone: number) => void
   /** Whether to show the TfL zone override select. Defaults to true. */
   showZone?: boolean
+  /** Override the dropdown label. Defaults to 'Borough' for London, 'District' for Swiss. */
+  districtLabel?: string
 }
 
 export default function DistrictSelect({
@@ -19,12 +21,15 @@ export default function DistrictSelect({
   onDistrictChange,
   onZoneChange,
   showZone = true,
+  districtLabel,
 }: Props) {
+  const label = districtLabel ?? (config.id === 'london' ? 'Borough' : 'District')
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="borough-select" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Borough
+          {label}
         </label>
         <select
           id="borough-select"

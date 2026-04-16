@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Threshold - The Financial Archivist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,700;1,6..72,400;1,6..72,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#535e71",
+                        "secondary-container": "#eae1da",
+                        "on-surface": "#31332e",
+                        "tertiary-dim": "#495467",
+                        "primary-container": "#e9e1dd",
+                        "tertiary-fixed": "#dae6fd",
+                        "inverse-on-surface": "#9e9d99",
+                        "on-secondary-fixed-variant": "#615a56",
+                        "tertiary": "#546073",
+                        "surface-variant": "#e2e3db",
+                        "on-secondary-fixed": "#443e3a",
+                        "tertiary-fixed-dim": "#ccd8ef",
+                        "outline": "#797c75",
+                        "inverse-surface": "#0e0e0c",
+                        "secondary-dim": "#58524d",
+                        "surface-tint": "#625d5b",
+                        "inverse-primary": "#ffffff",
+                        "on-error-container": "#742410",
+                        "error": "#9e422c",
+                        "secondary": "#645e59",
+                        "on-surface-variant": "#5d605a",
+                        "surface-container-low": "#f5f4ef",
+                        "tertiary-container": "#dae6fd",
+                        "surface-dim": "#d9dbd2",
+                        "on-background": "#31332e",
+                        "error-dim": "#5c1202",
+                        "primary-fixed-dim": "#dad3cf",
+                        "background": "#fbf9f5",
+                        "surface-container": "#eeeee8",
+                        "primary-dim": "#56514f",
+                        "on-tertiary": "#f8f8ff",
+                        "on-primary-fixed-variant": "#5f5b58",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#55514e",
+                        "secondary-fixed": "#eae1da",
+                        "primary-fixed": "#e9e1dd",
+                        "secondary-fixed-dim": "#dcd3cd",
+                        "outline-variant": "#b1b3ab",
+                        "on-primary": "#fef6f2",
+                        "error-container": "#fe8b70",
+                        "on-error": "#fff7f6",
+                        "surface-container-highest": "#e2e3db",
+                        "surface-container-high": "#e8e9e1",
+                        "surface-bright": "#fbf9f5",
+                        "on-primary-fixed": "#433e3c",
+                        "on-tertiary-fixed": "#374254",
+                        "surface": "#fbf9f5",
+                        "on-tertiary-container": "#495467",
+                        "on-secondary-container": "#57514c",
+                        "primary": "#625d5b",
+                        "on-secondary": "#fff7f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "0px"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": ["Newsreader", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Full-bleed background -->
+<div class="absolute inset-0 z-0">
+<img alt="" class="w-full h-full object-cover" data-alt="Moody, editorial photograph of European city rooftops like London at golden hour dusk with warm lighting and deep shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe_MMdhrexQ3QYWfC1riD9Wu6yJxcnV6Emky2zT77YFWB-8yEF1hJLiFHIN7EkIoPvETreNDxVxcLsZ27Q3HbKv2eeKzHX3beFFSbEkpVYownp5rON59-O2TeXPru93ld1T1ajqYvhfKw3nEIONem2TYorHFXfacEf2l2D6QHBp3uX99zNB4c8X8lS_RH98e744qTuVh59qwZDGAytJMjikE1GG9cb0LKtGmMzCHsGusDsminpCXHU9YZiuhc2SSNIDVCae0DJXMg"/>
+<!-- Darkening overlay -->
+<div class="absolute inset-0 bg-stone-900/60 mix-blend-multiply"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-stone-950/90"></div>
+</div>
+<!-- Top Navigation -->
+<header class="relative z-10 w-full px-8 py-6 max-w-7xl mx-auto flex justify-between items-center text-stone-50">
+<div class="text-2xl font-headline italic tracking-wide text-stone-50">
+            Threshold
+        </div>
+</header>
+<!-- Main Content -->
+<main class="relative z-10 flex-grow flex flex-col items-center justify-center px-6 py-24 md:py-32 w-full max-w-7xl mx-auto">
+<div class="text-center md:mb-24 space-y-6 max-w-3xl mb-28 md:mb-36">
+<h1 class="text-5xl md:text-7xl font-headline text-stone-50 tracking-tight leading-tight">
+                The real cost of <br class="hidden md:block"/>
+<span class="italic text-stone-300">moving out</span>
+</h1>
+<p class="text-base md:text-lg font-body text-stone-300 max-w-xl mx-auto leading-relaxed">
+                Select a city to see exactly what independent living costs — upfront and every month.
+            </p>
+</div>
+<div class="w-full flex flex-col md:flex-row justify-center gap-6 md:gap-8">
+<!-- City Card 1 -->
+<a class="group block w-full md:w-[280px] border hover:border-stone-200/40 p-6 md:p-8 transition-all duration-300 flex justify-between items-center bg-white/25 backdrop-blur-[24px] border-white/40" href="#">
+<div class="flex flex-col">
+<span class="text-2xl md:text-3xl font-headline text-stone-50">London</span>
+<span class="text-sm font-label uppercase tracking-wider text-stone-400 mt-2">England · GBP</span>
+</div>
+<span class="material-symbols-outlined text-stone-400 group-hover:text-stone-50 transition-colors duration-300 text-3xl font-light">
+                    arrow_forward
+                </span>
+</a>
+<!-- City Card 2 -->
+<a class="group block w-full md:w-[280px] border hover:border-stone-200/40 p-6 md:p-8 transition-all duration-300 flex justify-between items-center bg-white/25 backdrop-blur-[24px] border-white/40" href="#">
+<div class="flex flex-col">
+<span class="text-2xl md:text-3xl font-headline text-stone-50">Basel</span>
+<span class="text-sm font-label uppercase tracking-wider text-stone-400 mt-2">Switzerland · CHF</span>
+</div>
+<span class="material-symbols-outlined text-stone-400 group-hover:text-stone-50 transition-colors duration-300 text-3xl font-light">
+                    arrow_forward
+                </span>
+</a>
+<!-- City Card 3 -->
+<a class="group block w-full md:w-[280px] border hover:border-stone-200/40 p-6 md:p-8 transition-all duration-300 flex justify-between items-center bg-white/25 backdrop-blur-[24px] border-white/40" href="#">
+<div class="flex flex-col">
+<span class="text-2xl md:text-3xl font-headline text-stone-50">Zurich</span>
+<span class="text-sm font-label uppercase tracking-wider text-stone-400 mt-2">Switzerland · CHF</span>
+</div>
+<span class="material-symbols-outlined text-stone-400 group-hover:text-stone-50 transition-colors duration-300 text-3xl font-light">
+                    arrow_forward
+                </span>
+</a>
+</div>
+</main>
+<!-- Footer -->
+<footer class="relative z-10 w-full flex flex-col md:flex-row items-center px-12 py-12 max-w-7xl mx-auto border-t border-stone-200/10 mt-auto">
+<div class="text-lg font-headline text-stone-50 mb-4 md:mb-0 w-full md:w-1/3">
+            Threshold
+        </div>
+<div class="text-[10px] font-label uppercase tracking-widest text-stone-400/40 text-center w-full md:w-1/3">
+            Cost data last updated per city · Not financial advice
+        </div>
+<div class="w-full md:w-1/3"></div>
+</footer>
+</body></html>

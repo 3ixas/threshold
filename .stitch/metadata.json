@@ -1,0 +1,37 @@
+{
+  "name": "projects/2487341873075887444",
+  "projectId": "2487341873075887444",
+  "title": "Threshold — True Cost of Moving Out",
+  "visibility": "PRIVATE",
+  "createTime": "2026-04-16T16:30:29.942204Z",
+  "updateTime": "2026-04-16T16:32:21.660677Z",
+  "projectType": "PROJECT_DESIGN",
+  "origin": "STITCH",
+  "deviceType": "DESKTOP",
+  "designTheme": {
+    "colorMode": "LIGHT",
+    "font": "NEWSREADER",
+    "headlineFont": "NEWSREADER",
+    "labelFont": "INTER",
+    "customColor": "#1c1917",
+    "overrideNeutralColor": "#faf8f4",
+    "overridePrimaryColor": "#1c1917",
+    "overrideSecondaryColor": "#78716c",
+    "overrideTertiaryColor": "#4a5568",
+    "spacingScale": 3
+  },
+  "screens": {
+    "index": {
+      "id": "c022d108e29341c4b63f111be1851560",
+      "sourceScreen": "projects/2487341873075887444/screens/c022d108e29341c4b63f111be1851560",
+      "title": "Threshold - City Selection (Final)",
+      "width": 2560,
+      "height": 2048,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "metadata": {
+    "userRole": "OWNER"
+  }
+}

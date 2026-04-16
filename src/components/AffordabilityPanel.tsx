@@ -32,89 +32,99 @@ export default function AffordabilityPanel({
           Can I afford this?
         </p>
         <p className="text-sm font-body text-on-surface-variant leading-relaxed">
-          Optional — enter your income and savings to see your surplus and move-in timeline.
+          Enter your income and savings to see your monthly surplus and how long until you can move in.
         </p>
       </div>
 
-      {/* Income input */}
-      <div className="flex flex-col gap-1">
-        <label htmlFor="take-home" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Monthly take-home pay
-        </label>
-        <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
-          <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
-          <input
-            id="take-home"
-            type="number"
-            min={0}
-            value={takeHome || ''}
-            placeholder="0"
-            onChange={e => onTakeHomeChange(Math.max(0, Number(e.target.value)))}
-            className="flex-1 bg-transparent text-sm font-body tabular-nums text-on-surface py-2 pr-2 focus:outline-none text-right"
-          />
+      {/* Inputs */}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="take-home" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
+            Monthly take-home pay
+          </label>
+          <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
+            <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
+            <input
+              id="take-home"
+              type="number"
+              min={0}
+              value={takeHome || ''}
+              placeholder="0"
+              onChange={e => onTakeHomeChange(Math.max(0, Number(e.target.value)))}
+              className="flex-1 bg-transparent text-sm font-body tabular-nums text-on-surface py-2 pr-2 focus:outline-none text-right"
+            />
+          </div>
+          {isSwiss && (
+            <p className="text-xs font-body text-on-surface-variant/60 mt-0.5">
+              Don't include health insurance in your take-home — we've already counted it above.
+            </p>
+          )}
         </div>
-        {isSwiss && (
-          <p className="text-xs font-body text-on-surface-variant mt-1">
-            Don't include health insurance in your take-home — we've already counted it above.
-          </p>
-        )}
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="savings-input" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
+            Current savings
+          </label>
+          <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
+            <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
+            <input
+              id="savings-input"
+              type="number"
+              min={0}
+              value={savings || ''}
+              placeholder="0"
+              onChange={e => onSavingsChange(Math.max(0, Number(e.target.value)))}
+              className="flex-1 bg-transparent text-sm font-body tabular-nums text-on-surface py-2 pr-2 focus:outline-none text-right"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Savings input */}
-      <div className="flex flex-col gap-1">
-        <label htmlFor="savings-input" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
-          Current savings
-        </label>
-        <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
-          <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
-          <input
-            id="savings-input"
-            type="number"
-            min={0}
-            value={savings || ''}
-            placeholder="0"
-            onChange={e => onSavingsChange(Math.max(0, Number(e.target.value)))}
-            className="flex-1 bg-transparent text-sm font-body tabular-nums text-on-surface py-2 pr-2 focus:outline-none text-right"
-          />
-        </div>
-      </div>
-
-      {/* Result display — only shown when inputs are non-zero */}
+      {/* Result */}
       {result && (
-        <div className="border-t border-outline-variant/20 pt-4 flex flex-col gap-3">
+        <div className="border-t border-outline-variant/20 pt-5">
           {result.status === AffordabilityStatus.CAN_AFFORD_NOW && (
-            <>
-              <p data-testid="affordability-status" className="text-sm font-body text-tertiary">
-                You can afford to move in now.
+            <div className="bg-surface-container-low px-5 py-5">
+              <p className="text-[10px] font-label uppercase tracking-widest text-tertiary mb-2">
+                You can move in now
               </p>
-              <p data-testid="surplus-amount" className="text-sm font-body text-on-surface-variant">
-                Monthly surplus: {fmt(result.surplus, currency)}
+              <p data-testid="affordability-status" className="text-4xl font-headline tabular-nums text-tertiary leading-none">
+                {fmt(result.surplus, currency)}
+                <span className="text-base font-label ml-2 tracking-wider">/mo surplus</span>
               </p>
-            </>
+            </div>
           )}
 
           {result.status === AffordabilityStatus.NOT_YET && (
-            <>
-              <p data-testid="affordability-status" className="text-sm font-body text-on-surface">
-                Not quite yet.
-              </p>
-              <p data-testid="surplus-amount" className="text-sm font-body text-on-surface-variant">
-                Monthly surplus: {fmt(result.surplus, currency)}
-              </p>
-              <p className="text-sm font-body text-on-surface-variant">
-                Months until you can move in:{' '}
-                <span data-testid="months-to-move-in" className="font-body text-on-surface tabular-nums">
+            <div className="flex flex-col gap-5">
+              <div className="bg-surface-container-low px-5 py-5">
+                <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-2">
+                  Months until you can move in
+                </p>
+                <p data-testid="months-to-move-in" className="text-5xl font-headline tabular-nums text-on-surface leading-none">
                   {result.monthsToMoveIn}
+                </p>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">Monthly surplus</span>
+                <span data-testid="surplus-amount" className="text-sm font-body tabular-nums text-on-surface">
+                  {fmt(result.surplus, currency)}
                 </span>
-              </p>
-            </>
+              </div>
+              <p data-testid="affordability-status" className="sr-only">Not quite yet</p>
+            </div>
           )}
 
           {result.status === AffordabilityStatus.INCOME_INSUFFICIENT && (
-            <p data-testid="affordability-status" className="text-sm font-body text-error">
-              Your income doesn't cover the monthly costs.
-              Shortfall: {fmt(result.surplus, currency)}/month.
-            </p>
+            <div className="bg-surface-container-low px-5 py-5">
+              <p className="text-[10px] font-label uppercase tracking-widest text-error mb-2">
+                Income insufficient
+              </p>
+              <p data-testid="affordability-status" className="text-2xl font-headline tabular-nums text-error leading-none">
+                −{fmt(result.surplus, currency)}
+                <span className="text-sm font-label ml-2 tracking-wider">/mo shortfall</span>
+              </p>
+            </div>
           )}
         </div>
       )}

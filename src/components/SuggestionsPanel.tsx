@@ -23,13 +23,19 @@ export default function SuggestionsPanel({ suggestions, currency, onApply }: Pro
             key={i}
             type="button"
             onClick={() => onApply(s.updatedInputs)}
-            className="flex items-center justify-between w-full text-left px-4 py-3 bg-surface-container-low border border-outline-variant/30 hover:bg-surface-container hover:border-outline-variant transition-all duration-300 group"
+            className="flex items-center justify-between w-full text-left px-4 py-3.5 bg-surface-container-low border border-outline-variant/30 hover:bg-surface-container hover:border-primary/40 transition-all duration-300 group"
           >
             <span className="text-sm font-body text-on-surface group-hover:text-primary transition-colors">
               {s.label}
             </span>
-            <span className="text-xs font-label uppercase tracking-wider text-tertiary whitespace-nowrap ml-4">
-              Save {symbol[currency]}{Math.round(s.saving).toLocaleString('en-GB')}/mo
+            <span className="flex items-center gap-2 ml-4 shrink-0">
+              <span className="text-sm font-headline tabular-nums text-primary">
+                −{symbol[currency]}{Math.round(s.saving).toLocaleString('en-GB')}
+              </span>
+              <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">/mo</span>
+              <span className="text-on-surface-variant group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300 text-base leading-none">
+                →
+              </span>
             </span>
           </button>
         ))}
