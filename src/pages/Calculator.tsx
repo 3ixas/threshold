@@ -1,16 +1,20 @@
 import { useCallback, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import london from '../data/london'
 import londonBoroughs from '../data/london-boroughs'
 import { useCalculatorState } from '../lib/useCalculatorState'
 import { calculateUpfront, calculateMonthly } from '../lib/calculate'
 import { getDistrictById, getZoneForDistrict, getBoroughBounds } from '../lib/districts'
+import { serialise, deserialise } from '../lib/url-state'
+import { serialiseScenarioB, deserialiseScenarioB, hasScenarioB, mergeScenariosIntoParams } from '../lib/comparison'
 import DistrictMap from '../components/DistrictMap'
 import DistrictSelect from '../components/DistrictSelect'
 import ConfigPanel from '../components/ConfigPanel'
 import ResultsPanel from '../components/ResultsPanel'
 import AffordabilityPanel from '../components/AffordabilityPanel'
 import SuggestionsPanel from '../components/SuggestionsPanel'
+import ScenarioBConfig from '../components/ScenarioBConfig'
+import ComparisonResults from '../components/ComparisonResults'
 import { calculateAffordability } from '../lib/affordability'
 import { generateSuggestions } from '../lib/suggestions'
 import type { CalculatorInputs } from '../lib/types'
@@ -23,11 +27,44 @@ interface CalculatorProps {
 
 function LondonCalculator() {
   const [inputs, setInputs] = useCalculatorState(london)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const inComparisonMode = useMemo(() => hasScenarioB(searchParams), [searchParams])
+
+  const scenarioBInputs = useMemo(
+    () => inComparisonMode ? deserialiseScenarioB(searchParams, london) : null,
+    [searchParams, inComparisonMode]
+  )
+
+  const enterComparison = useCallback(() => {
+    const aParams = serialise(inputs)
+    const bParams = serialiseScenarioB({ ...inputs })
+    setSearchParams(mergeScenariosIntoParams(aParams, bParams), { replace: true })
+  }, [inputs, setSearchParams])
+
+  const exitComparison = useCallback(() => {
+    setSearchParams(serialise(deserialise(searchParams, london)), { replace: true })
+  }, [searchParams, setSearchParams])
+
+  const setScenarioB = useCallback((updated: CalculatorInputs) => {
+    const aParams = serialise(inputs)
+    const bParams = serialiseScenarioB(updated)
+    setSearchParams(mergeScenariosIntoParams(aParams, bParams), { replace: true })
+  }, [inputs, setSearchParams])
 
   // Compute results reactively from inputs — no submit button
   const monthly = useMemo(() => calculateMonthly(london, inputs), [inputs])
   const upfront = useMemo(() => calculateUpfront(london, inputs), [inputs])
   const suggestions = useMemo(() => generateSuggestions(inputs, london), [inputs])
+
+  const monthlyB = useMemo(
+    () => scenarioBInputs ? calculateMonthly(london, scenarioBInputs) : null,
+    [scenarioBInputs]
+  )
+  const upfrontB = useMemo(
+    () => scenarioBInputs ? calculateUpfront(london, scenarioBInputs) : null,
+    [scenarioBInputs]
+  )
 
   const affordability = useMemo(() => {
     if (!inputs.takeHome) return null
@@ -148,7 +185,7 @@ function LondonCalculator() {
             </div>
 
             {/* What-if suggestions */}
-            {suggestions.length > 0 && (
+            {suggestions.length > 0 && !inComparisonMode && (
               <div className="border-t border-outline-variant/20 pt-6">
                 <SuggestionsPanel
                   suggestions={suggestions}
@@ -158,28 +195,58 @@ function LondonCalculator() {
               </div>
             )}
 
-            {/* Results */}
-            <div className="border-t border-outline-variant/20 pt-6">
-              <ResultsPanel
-                monthly={monthly}
-                upfront={upfront}
-                currency="GBP"
-                lastUpdated="April 2026"
-              />
-            </div>
+            {/* Results (single scenario) */}
+            {!inComparisonMode && (
+              <div className="border-t border-outline-variant/20 pt-6">
+                <ResultsPanel
+                  monthly={monthly}
+                  upfront={upfront}
+                  currency="GBP"
+                  lastUpdated="April 2026"
+                />
+                <button
+                  type="button"
+                  onClick={enterComparison}
+                  className="mt-6 w-full py-2 border border-outline-variant text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface hover:border-primary transition-all"
+                >
+                  Compare scenarios
+                </button>
+              </div>
+            )}
 
-            {/* Affordability layer */}
-            <div className="border-t border-outline-variant/20 pt-6">
-              <AffordabilityPanel
-                takeHome={inputs.takeHome ?? 0}
-                savings={inputs.savings ?? 0}
-                result={affordability}
-                currency="GBP"
-                cityId="london"
-                onTakeHomeChange={v => setInputs({ ...inputs, takeHome: v || undefined })}
-                onSavingsChange={v => setInputs({ ...inputs, savings: v || undefined })}
-              />
-            </div>
+            {/* Comparison mode */}
+            {inComparisonMode && scenarioBInputs && monthlyB && upfrontB && (
+              <div className="border-t border-outline-variant/20 pt-6 flex flex-col gap-6">
+                <ScenarioBConfig
+                  config={london}
+                  inputs={scenarioBInputs}
+                  onChange={setScenarioB}
+                  onExit={exitComparison}
+                />
+                <ComparisonResults
+                  monthlyA={monthly}
+                  monthlyB={monthlyB}
+                  upfrontA={upfront}
+                  upfrontB={upfrontB}
+                  currency="GBP"
+                />
+              </div>
+            )}
+
+            {/* Affordability layer (single scenario only) */}
+            {!inComparisonMode && (
+              <div className="border-t border-outline-variant/20 pt-6">
+                <AffordabilityPanel
+                  takeHome={inputs.takeHome ?? 0}
+                  savings={inputs.savings ?? 0}
+                  result={affordability}
+                  currency="GBP"
+                  cityId="london"
+                  onTakeHomeChange={v => setInputs({ ...inputs, takeHome: v || undefined })}
+                  onSavingsChange={v => setInputs({ ...inputs, savings: v || undefined })}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

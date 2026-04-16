@@ -98,3 +98,22 @@ export function calculateMonthly(config: CityConfig, inputs: CalculatorInputs): 
     total,
   }
 }
+
+/** Returns B minus A for every MonthlyCosts field. Negative = B is cheaper. */
+export function calculateMonthlyCostsDiff(a: MonthlyCosts, b: MonthlyCosts): MonthlyCosts {
+  const round = (n: number) => Math.round(n * 100) / 100
+  return {
+    rent: round(b.rent - a.rent),
+    transport: round(b.transport - a.transport),
+    utilities: round(b.utilities - a.utilities),
+    broadband: round(b.broadband - a.broadband),
+    councilTax: round(b.councilTax - a.councilTax),
+    healthInsurance: round(b.healthInsurance - a.healthInsurance),
+    mediaFee: round(b.mediaFee - a.mediaFee),
+    tvLicence: round(b.tvLicence - a.tvLicence),
+    food: round(b.food - a.food),
+    contentsInsurance: round(b.contentsInsurance - a.contentsInsurance),
+    lifestyle: round(b.lifestyle - a.lifestyle),
+    total: round(b.total - a.total),
+  }
+}
