@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import Landing from './pages/Landing'
 import Calculator from './pages/Calculator'
 
