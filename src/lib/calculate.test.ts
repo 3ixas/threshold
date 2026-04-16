@@ -69,7 +69,7 @@ const baseInputs: CalculatorInputs = {
   districtId: 'zone2',
   propertyType: '1bed',
   occupants: 1,
-  lifestyle: { phone: 30, gym: 40, streaming: 15, other: 50 },
+  lifestyle: { phone: 30, gym: 40, subscriptions: 15, eatingOut: 0, personalCare: 0, savingsTarget: 50 },
 }
 
 // ─────────────────────────────────────────────────────

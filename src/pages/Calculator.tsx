@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom'
 import london from '../data/london'
 import londonBoroughs from '../data/london-boroughs'
 import { useCalculatorState } from '../lib/useCalculatorState'
+import { calculateUpfront, calculateMonthly } from '../lib/calculate'
 import { getDistrictById, getZoneForDistrict, getBoroughBounds } from '../lib/districts'
 import DistrictMap from '../components/DistrictMap'
 import DistrictSelect from '../components/DistrictSelect'
+import ConfigPanel from '../components/ConfigPanel'
+import ResultsPanel from '../components/ResultsPanel'
+import type { CalculatorInputs } from '../lib/types'
 
 interface CalculatorProps {
   city: 'london' | 'basel' | 'zurich'
@@ -16,17 +20,21 @@ interface CalculatorProps {
 function LondonCalculator() {
   const [inputs, setInputs] = useCalculatorState(london)
 
-  // Derive the ONS code for the selected district (needed by DistrictMap)
+  // Compute results reactively from inputs — no submit button
+  const monthly = useMemo(() => calculateMonthly(london, inputs), [inputs])
+  const upfront = useMemo(() => calculateUpfront(london, inputs), [inputs])
+
+  // Map the selected district to its ONS code (needed by DistrictMap)
   const selectedOnsCode = useMemo(() => {
     const district = getDistrictById(london, inputs.districtId)
     if (!district) return null
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '')
     return londonBoroughs.features.find(
-      f => f.properties.name.toLowerCase().replace(/[^a-z]/g, '') ===
-           district.name.toLowerCase().replace(/[^a-z]/g, '')
+      f => norm(f.properties.name) === norm(district.name)
     )?.properties.code ?? null
   }, [inputs.districtId])
 
-  // Derive TfL zone: use transportOverride back-mapped to zone, else district zone
+  // Derive the active TfL zone for display in DistrictSelect
   const currentZone = useMemo((): number => {
     if (inputs.transportOverride !== undefined && london.tflAnnualCosts) {
       const annual = inputs.transportOverride * 12
@@ -38,86 +46,109 @@ function LondonCalculator() {
     return getZoneForDistrict(london, inputs.districtId) ?? 2
   }, [inputs.districtId, inputs.transportOverride])
 
-  const handleDistrictSelect = useCallback((onsCode: string) => {
+  const handleMapSelect = useCallback((onsCode: string) => {
     const feature = londonBoroughs.features.find(f => f.properties.code === onsCode)
     if (!feature) return
-    // Match ONS name → london district id
-    const normalise = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '')
-    const district = london.districts.find(
-      d => normalise(d.name) === normalise(feature.properties.name)
-    )
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '')
+    const district = london.districts.find(d => norm(d.name) === norm(feature.properties.name))
     if (!district) return
-    // Auto-assign zone from district config; clear any zone override
     setInputs({ ...inputs, districtId: district.id, transportOverride: undefined })
   }, [inputs, setInputs])
 
   const handleDistrictChange = useCallback((districtId: string) => {
-    const bounds = (() => {
-      const feature = londonBoroughs.features.find(f => {
-        const d = getDistrictById(london, districtId)
-        if (!d) return false
-        const norm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '')
-        return norm(f.properties.name) === norm(d.name)
-      })
-      return feature ? getBoroughBounds(londonBoroughs, feature.properties.code) : undefined
-    })()
-    void bounds // bounds consumed by DistrictMap via selectedCode change
     setInputs({ ...inputs, districtId, transportOverride: undefined })
   }, [inputs, setInputs])
 
   const handleZoneChange = useCallback((zone: number) => {
     const annual = london.tflAnnualCosts?.[zone as 1|2|3|4|5|6]
-    const transportOverride = annual ? annual / 12 : undefined
-    setInputs({ ...inputs, transportOverride })
+    setInputs({ ...inputs, transportOverride: annual ? annual / 12 : undefined })
   }, [inputs, setInputs])
+
+  const handleConfigChange = useCallback((updated: CalculatorInputs) => {
+    setInputs(updated)
+  }, [setInputs])
+
+  // fitBounds when district changes via dropdown
+  useMemo(() => {
+    void getBoroughBounds(londonBoroughs, selectedOnsCode ?? '')
+  }, [selectedOnsCode])
+
+  const currentDistrict = getDistrictById(london, inputs.districtId)
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Nav */}
-      <header className="w-full px-8 py-5 border-b border-outline-variant flex items-center gap-6">
+      <header className="w-full px-8 py-5 border-b border-outline-variant/30 flex items-center gap-6 bg-background">
         <Link to="/" className="text-xl font-headline italic text-on-surface tracking-wide">
           Threshold
         </Link>
         <span className="text-sm font-label uppercase tracking-wider text-on-surface-variant">
           London
         </span>
+        <Link to="/" className="ml-auto text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">
+          Change city
+        </Link>
       </header>
 
-      <div className="flex-1 flex flex-col md:flex-row">
-        {/* Map panel */}
-        <div className="w-full md:w-1/2 h-[50vh] md:h-auto relative">
+      {/* Main: 55% map | 45% controls + results */}
+      <div className="flex-1 flex flex-col md:flex-row min-h-0">
+        {/* Map panel — 55% */}
+        <div className="w-full md:w-[55%] h-[45vh] md:h-auto relative">
           <DistrictMap
             geojson={londonBoroughs}
             selectedCode={selectedOnsCode}
-            onSelect={handleDistrictSelect}
+            onSelect={handleMapSelect}
           />
         </div>
 
-        {/* Controls panel */}
-        <div className="w-full md:w-1/2 p-8 flex flex-col gap-8 overflow-y-auto">
-          <div>
-            <h1 className="text-2xl font-headline text-on-surface mb-1">
-              {getDistrictById(london, inputs.districtId)?.name ?? 'Select a borough'}
-            </h1>
-            <p className="text-sm font-label uppercase tracking-wider text-on-surface-variant">
-              London · GBP
-            </p>
-          </div>
+        {/* Right panel — 45%, scrollable */}
+        <div className="w-full md:w-[45%] overflow-y-auto bg-background border-l border-outline-variant/20">
+          <div className="px-8 py-8 flex flex-col gap-8">
+            {/* District heading */}
+            <div>
+              <h1 className="text-2xl font-headline text-on-surface">
+                {currentDistrict?.name ?? 'Select a borough'}
+              </h1>
+              <p className="text-xs font-label uppercase tracking-wider text-on-surface-variant mt-1">
+                London · GBP
+              </p>
+            </div>
 
-          <DistrictSelect
-            config={london}
-            districtId={inputs.districtId}
-            tflZone={currentZone}
-            onDistrictChange={handleDistrictChange}
-            onZoneChange={handleZoneChange}
-          />
+            {/* District + zone selects */}
+            <DistrictSelect
+              config={london}
+              districtId={inputs.districtId}
+              tflZone={currentZone}
+              onDistrictChange={handleDistrictChange}
+              onZoneChange={handleZoneChange}
+            />
+
+            {/* Configuration panel */}
+            <div className="border-t border-outline-variant/20 pt-6">
+              <ConfigPanel
+                config={london}
+                inputs={inputs}
+                onChange={handleConfigChange}
+              />
+            </div>
+
+            {/* Results */}
+            <div className="border-t border-outline-variant/20 pt-6">
+              <ResultsPanel
+                monthly={monthly}
+                upfront={upfront}
+                currency="GBP"
+                lastUpdated="April 2026"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-// ── Stub for Basel / Zurich (future slices) ──────────────────────
+// ── Stubs for Basel / Zurich ─────────────────────────────────────
 
 const cityLabels: Record<CalculatorProps['city'], string> = {
   london: 'London',

@@ -8,9 +8,7 @@ export interface District {
   id: string
   name: string
   rent: Partial<Record<PropertyType, number>>
-  /** London only — annual Band D council tax */
   councilTaxBandD?: number
-  /** London only — TfL zone (affects transport cost) */
   tflZone?: 1 | 2 | 3 | 4 | 5 | 6
 }
 
@@ -29,13 +27,11 @@ export interface CityConfig {
     contentsInsurance: number
     movingCosts: number
     furnitureBudget: number
-    tvLicence?: number       // UK only
-    healthInsurance?: number // Swiss only
-    mediaFee?: number        // Swiss only
+    tvLicence?: number
+    healthInsurance?: number
+    mediaFee?: number
   }
-  /** London: 'five_weeks' (Tenant Fees Act 2019). Swiss: 'three_months' (Art. 257e CO). */
   depositRule: 'five_weeks' | 'three_months'
-  /** London only — annual Travelcard cost by zone. */
   tflAnnualCosts?: Partial<Record<1 | 2 | 3 | 4 | 5 | 6, number>>
   lastUpdated: string
 }
@@ -44,20 +40,30 @@ export interface CityConfig {
 
 export interface LifestyleCosts {
   phone: number
+  subscriptions: number
   gym: number
-  streaming: number
-  other: number
+  eatingOut: number
+  personalCare: number
+  savingsTarget: number
 }
 
 export interface CalculatorInputs {
   districtId: string
   propertyType: PropertyType
-  /** 1 triggers 25% council tax single-person discount in London */
-  occupants: 1 | 2
+  /** 1 = alone; 2 = with partner or 1 flatmate; 3 = with 2 flatmates; 4 = with 3 flatmates */
+  occupants: 1 | 2 | 3 | 4
   lifestyle: LifestyleCosts
-  /** Override the TfL zone lookup (London) or city default transport cost */
+  /** User-specified food budget (£/month). Overrides city default. */
+  food?: number
+  /** Overrides city default broadband cost */
+  broadbandOverride?: number
+  /** Overrides city default moving cost */
+  movingCostsOverride?: number
+  /** Overrides city default furniture budget */
+  furnitureBudgetOverride?: number
+  /** Overrides TfL zone-derived transport cost (London) */
   transportOverride?: number
-  /** Override the city-level health insurance default (Swiss cities) */
+  /** Overrides city default health insurance (Swiss) */
   healthInsuranceOverride?: number
 }
 

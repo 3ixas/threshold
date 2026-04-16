@@ -41,7 +41,18 @@ const fullInputs: CalculatorInputs = {
   districtId: 'hackney',
   propertyType: '1bed',
   occupants: 2,
-  lifestyle: { phone: 30, gym: 40, streaming: 15, other: 50 },
+  lifestyle: {
+    phone: 30,
+    subscriptions: 15,
+    gym: 40,
+    eatingOut: 100,
+    personalCare: 50,
+    savingsTarget: 200,
+  },
+  food: 350,
+  broadbandOverride: 40,
+  movingCostsOverride: 900,
+  furnitureBudgetOverride: 2500,
   transportOverride: 120,
   healthInsuranceOverride: 380,
 }
@@ -51,49 +62,45 @@ const fullInputs: CalculatorInputs = {
 // ─────────────────────────────────────────────────────
 
 describe('serialise', () => {
-  it('produces human-readable district param', () => {
-    const params = serialise(fullInputs)
-    expect(params.get('district')).toBe('hackney')
-  })
-
-  it('produces human-readable type param', () => {
-    const params = serialise(fullInputs)
-    expect(params.get('type')).toBe('1bed')
-  })
-
-  it('serialises occupant count as people', () => {
-    const params = serialise(fullInputs)
-    expect(params.get('people')).toBe('2')
+  it('serialises district, type, and people', () => {
+    const p = serialise(fullInputs)
+    expect(p.get('district')).toBe('hackney')
+    expect(p.get('type')).toBe('1bed')
+    expect(p.get('people')).toBe('2')
   })
 
   it('serialises all lifestyle cost fields', () => {
-    const params = serialise(fullInputs)
-    expect(params.get('phone')).toBe('30')
-    expect(params.get('gym')).toBe('40')
-    expect(params.get('streaming')).toBe('15')
-    expect(params.get('other')).toBe('50')
+    const p = serialise(fullInputs)
+    expect(p.get('phone')).toBe('30')
+    expect(p.get('subs')).toBe('15')
+    expect(p.get('gym')).toBe('40')
+    expect(p.get('eating')).toBe('100')
+    expect(p.get('care')).toBe('50')
+    expect(p.get('savings')).toBe('200')
   })
 
-  it('serialises transport override when present', () => {
-    const params = serialise(fullInputs)
-    expect(params.get('transport')).toBe('120')
+  it('serialises all optional overrides when present', () => {
+    const p = serialise(fullInputs)
+    expect(p.get('food')).toBe('350')
+    expect(p.get('broadband')).toBe('40')
+    expect(p.get('moving')).toBe('900')
+    expect(p.get('furniture')).toBe('2500')
+    expect(p.get('transport')).toBe('120')
+    expect(p.get('health')).toBe('380')
   })
 
-  it('omits transport param when no override', () => {
-    const noOverride: CalculatorInputs = { ...fullInputs, transportOverride: undefined }
-    const params = serialise(noOverride)
-    expect(params.get('transport')).toBeNull()
-  })
-
-  it('serialises health insurance override when present', () => {
-    const params = serialise(fullInputs)
-    expect(params.get('health')).toBe('380')
-  })
-
-  it('omits health param when no override', () => {
-    const noOverride: CalculatorInputs = { ...fullInputs, healthInsuranceOverride: undefined }
-    const params = serialise(noOverride)
-    expect(params.get('health')).toBeNull()
+  it('omits optional override params when not set', () => {
+    const minimal: CalculatorInputs = {
+      districtId: 'hackney',
+      propertyType: '1bed',
+      occupants: 1,
+      lifestyle: { phone: 0, subscriptions: 0, gym: 0, eatingOut: 0, personalCare: 0, savingsTarget: 0 },
+    }
+    const p = serialise(minimal)
+    expect(p.get('food')).toBeNull()
+    expect(p.get('broadband')).toBeNull()
+    expect(p.get('transport')).toBeNull()
+    expect(p.get('health')).toBeNull()
   })
 })
 
@@ -102,40 +109,34 @@ describe('serialise', () => {
 // ─────────────────────────────────────────────────────
 
 describe('deserialise', () => {
-  it('restores districtId from district param', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1')
-    const result = deserialise(params, config)
-    expect(result.districtId).toBe('hackney')
-  })
-
-  it('restores propertyType from type param', () => {
-    const params = new URLSearchParams('district=hackney&type=2bed&people=1')
-    const result = deserialise(params, config)
-    expect(result.propertyType).toBe('2bed')
-  })
-
-  it('restores occupants from people param', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=2')
-    const result = deserialise(params, config)
-    expect(result.occupants).toBe(2)
+  it('restores all core fields', () => {
+    const p = new URLSearchParams('district=hackney&type=1bed&people=2')
+    const r = deserialise(p, config)
+    expect(r.districtId).toBe('hackney')
+    expect(r.propertyType).toBe('1bed')
+    expect(r.occupants).toBe(2)
   })
 
   it('restores all lifestyle costs', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1&phone=30&gym=40&streaming=15&other=50')
-    const result = deserialise(params, config)
-    expect(result.lifestyle).toEqual({ phone: 30, gym: 40, streaming: 15, other: 50 })
+    const p = new URLSearchParams('district=hackney&type=1bed&people=1&phone=30&subs=15&gym=40&eating=100&care=50&savings=200')
+    const r = deserialise(p, config)
+    expect(r.lifestyle).toEqual({ phone: 30, subscriptions: 15, gym: 40, eatingOut: 100, personalCare: 50, savingsTarget: 200 })
   })
 
-  it('restores transportOverride from transport param', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1&transport=99')
-    const result = deserialise(params, config)
-    expect(result.transportOverride).toBe(99)
+  it('restores all optional overrides', () => {
+    const p = new URLSearchParams('district=hackney&type=1bed&people=1&food=350&broadband=40&moving=900&furniture=2500&transport=120&health=380')
+    const r = deserialise(p, config)
+    expect(r.food).toBe(350)
+    expect(r.broadbandOverride).toBe(40)
+    expect(r.movingCostsOverride).toBe(900)
+    expect(r.furnitureBudgetOverride).toBe(2500)
+    expect(r.transportOverride).toBe(120)
+    expect(r.healthInsuranceOverride).toBe(380)
   })
 
-  it('restores healthInsuranceOverride from health param', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1&health=380')
-    const result = deserialise(params, config)
-    expect(result.healthInsuranceOverride).toBe(380)
+  it('accepts occupants 3 and 4', () => {
+    expect(deserialise(new URLSearchParams('district=hackney&type=1bed&people=3'), config).occupants).toBe(3)
+    expect(deserialise(new URLSearchParams('district=hackney&type=1bed&people=4'), config).occupants).toBe(4)
   })
 })
 
@@ -145,85 +146,54 @@ describe('deserialise', () => {
 
 describe('round-trip', () => {
   it('serialise then deserialise produces identical CalculatorInputs', () => {
-    const params = serialise(fullInputs)
-    const restored = deserialise(params, config)
-    expect(restored).toEqual(fullInputs)
+    expect(deserialise(serialise(fullInputs), config)).toEqual(fullInputs)
   })
 
-  it('round-trips inputs without optional overrides', () => {
+  it('round-trips minimal inputs without optional overrides', () => {
     const minimal: CalculatorInputs = {
       districtId: 'southwark',
       propertyType: '1bed',
       occupants: 1,
-      lifestyle: { phone: 25, gym: 0, streaming: 10, other: 30 },
+      lifestyle: { phone: 25, subscriptions: 10, gym: 0, eatingOut: 30, personalCare: 0, savingsTarget: 0 },
     }
-    const restored = deserialise(serialise(minimal), config)
-    expect(restored).toEqual(minimal)
+    expect(deserialise(serialise(minimal), config)).toEqual(minimal)
   })
 })
 
 // ─────────────────────────────────────────────────────
-// fallbacks for missing / invalid params
+// fallbacks
 // ─────────────────────────────────────────────────────
 
 describe('deserialise fallbacks', () => {
   it('falls back to first district when district param is missing', () => {
-    const params = new URLSearchParams('type=1bed&people=1')
-    const result = deserialise(params, config)
-    expect(result.districtId).toBe(config.districts[0].id)
+    expect(deserialise(new URLSearchParams('type=1bed&people=1'), config).districtId).toBe('hackney')
   })
 
-  it('falls back to first district when district param is unknown', () => {
-    const params = new URLSearchParams('district=nowhere&type=1bed&people=1')
-    const result = deserialise(params, config)
-    expect(result.districtId).toBe(config.districts[0].id)
-  })
-
-  it('falls back to 1bed when type param is missing', () => {
-    const params = new URLSearchParams('district=hackney&people=1')
-    const result = deserialise(params, config)
-    expect(result.propertyType).toBe('1bed')
+  it('falls back to first district when district is unknown', () => {
+    expect(deserialise(new URLSearchParams('district=nowhere&type=1bed&people=1'), config).districtId).toBe('hackney')
   })
 
   it('falls back to 1bed when type param is invalid', () => {
-    const params = new URLSearchParams('district=hackney&type=penthouse&people=1')
-    const result = deserialise(params, config)
-    expect(result.propertyType).toBe('1bed')
+    expect(deserialise(new URLSearchParams('district=hackney&type=penthouse&people=1'), config).propertyType).toBe('1bed')
   })
 
-  it('falls back to 1 occupant when people param is missing', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed')
-    const result = deserialise(params, config)
-    expect(result.occupants).toBe(1)
-  })
-
-  it('falls back to 1 occupant when people param is out-of-range', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=5')
-    const result = deserialise(params, config)
-    expect(result.occupants).toBe(1)
+  it('falls back to 1 occupant when people is out-of-range', () => {
+    expect(deserialise(new URLSearchParams('district=hackney&type=1bed&people=9'), config).occupants).toBe(1)
   })
 
   it('falls back lifestyle costs to 0 when params are missing', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1')
-    const result = deserialise(params, config)
-    expect(result.lifestyle).toEqual({ phone: 0, gym: 0, streaming: 0, other: 0 })
+    const r = deserialise(new URLSearchParams('district=hackney&type=1bed&people=1'), config)
+    expect(r.lifestyle).toEqual({ phone: 0, subscriptions: 0, gym: 0, eatingOut: 0, personalCare: 0, savingsTarget: 0 })
   })
 
   it('falls back lifestyle cost to 0 when param is non-numeric', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1&gym=lots')
-    const result = deserialise(params, config)
-    expect(result.lifestyle.gym).toBe(0)
+    const r = deserialise(new URLSearchParams('district=hackney&type=1bed&people=1&gym=lots'), config)
+    expect(r.lifestyle.gym).toBe(0)
   })
 
-  it('omits transportOverride when transport param is missing', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1')
-    const result = deserialise(params, config)
-    expect(result.transportOverride).toBeUndefined()
-  })
-
-  it('omits transportOverride when transport param is non-numeric', () => {
-    const params = new URLSearchParams('district=hackney&type=1bed&people=1&transport=fast')
-    const result = deserialise(params, config)
-    expect(result.transportOverride).toBeUndefined()
+  it('omits optional overrides when params are missing or non-numeric', () => {
+    const r = deserialise(new URLSearchParams('district=hackney&type=1bed&people=1&transport=fast'), config)
+    expect(r.transportOverride).toBeUndefined()
+    expect(r.food).toBeUndefined()
   })
 })

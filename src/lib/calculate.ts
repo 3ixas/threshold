@@ -22,8 +22,8 @@ export function calculateUpfront(config: CityConfig, inputs: CalculatorInputs): 
     ? Math.round((rent * 12 / 52) * 5 * 100) / 100
     : rent * 3
 
-  const movingCosts = config.defaults.movingCosts
-  const furnitureBudget = config.defaults.furnitureBudget
+  const movingCosts = inputs.movingCostsOverride ?? config.defaults.movingCosts
+  const furnitureBudget = inputs.furnitureBudgetOverride ?? config.defaults.furnitureBudget
 
   return {
     securityDeposit,
@@ -40,12 +40,13 @@ export function calculateMonthly(config: CityConfig, inputs: CalculatorInputs): 
   const { occupants } = inputs
   const d = config.defaults
 
-  // ── Shared costs (split by occupant count) ──────
+  // Shared costs divided by occupant count
   const rentPerPerson = rent / occupants
   const utilitiesPerPerson = d.utilities / occupants
-  const broadbandPerPerson = d.broadband / occupants
+  const broadband = inputs.broadbandOverride ?? d.broadband
+  const broadbandPerPerson = broadband / occupants
 
-  // ── Council tax (London only, shared + optional single-person discount) ──
+  // Council tax — London only, shared + optional single-person discount
   let councilTax = 0
   if (district.councilTaxBandD !== undefined) {
     const monthlyBandD = district.councilTaxBandD / 12
@@ -53,7 +54,7 @@ export function calculateMonthly(config: CityConfig, inputs: CalculatorInputs): 
     councilTax = discounted / occupants
   }
 
-  // ── Transport (per-person; TfL zone lookup for London) ──
+  // Transport — per-person, TfL zone lookup for London
   let transport: number
   if (inputs.transportOverride !== undefined) {
     transport = inputs.transportOverride
@@ -64,16 +65,17 @@ export function calculateMonthly(config: CityConfig, inputs: CalculatorInputs): 
     transport = d.transport
   }
 
-  // ── Health insurance (Swiss; per-person; user-overridable) ──
+  // Health insurance — Swiss, per-person, user-overridable
   const healthInsurance = inputs.healthInsuranceOverride ?? d.healthInsurance ?? 0
-
-  // ── Other fixed/per-person costs ────────────────
   const mediaFee = d.mediaFee ?? 0
   const tvLicence = d.tvLicence ?? 0
-  const food = d.food
+
+  // Per-person costs never divided
+  const food = inputs.food ?? d.food
   const contentsInsurance = d.contentsInsurance
-  const lifestyle = inputs.lifestyle.phone + inputs.lifestyle.gym
-    + inputs.lifestyle.streaming + inputs.lifestyle.other
+
+  const { lifestyle: ls } = inputs
+  const lifestyle = ls.phone + ls.subscriptions + ls.gym + ls.eatingOut + ls.personalCare + ls.savingsTarget
 
   const total = Math.round((
     rentPerPerson + transport + utilitiesPerPerson + broadbandPerPerson
