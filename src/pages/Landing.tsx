@@ -127,8 +127,11 @@ export default function Landing() {
       {/* Full-bleed photo background */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe_MMdhrexQ3QYWfC1riD9Wu6yJxcnV6Emky2zT77YFWB-8yEF1hJLiFHIN7EkIoPvETreNDxVxcLsZ27Q3HbKv2eeKzHX3beFFSbEkpVYownp5rON59-O2TeXPru93ld1T1ajqYvhfKw3nEIONem2TYorHFXfacEf2l2D6QHBp3uX99zNB4c8X8lS_RH98e744qTuVh59qwZDGAytJMjikE1GG9cb0LKtGmMzCHsGusDsminpCXHU9YZiuhc2SSNIDVCae0DJXMg"
+          src="/hero.jpg"
           alt=""
+          fetchPriority="high"
+          width={1920}
+          height={1280}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-stone-900/60 mix-blend-multiply" />
