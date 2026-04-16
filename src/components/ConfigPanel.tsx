@@ -139,27 +139,40 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
         />
       )}
 
-      {/* Lifestyle costs — collapsible */}
+      {/* Lifestyle costs — collapsible with CSS grid transition */}
       <div>
         <button
           type="button"
           onClick={() => setLifestyleOpen(o => !o)}
-          className="flex w-full items-center justify-between py-2 text-xs font-label uppercase tracking-wider text-on-surface-variant border-b border-outline-variant/20"
+          className="flex w-full items-center justify-between py-2 text-xs font-label uppercase tracking-wider text-on-surface-variant border-b border-outline-variant/20 active:opacity-60 active:transition-none transition-opacity duration-150"
+          aria-expanded={lifestyleOpen}
         >
           <span>Lifestyle costs</span>
-          <span className="text-lg leading-none">{lifestyleOpen ? '−' : '+'}</span>
+          {/* Chevron rotates — more readable than swapping +/− */}
+          <span
+            className="text-xs leading-none transition-transform duration-200 origin-center"
+            style={{
+              transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+              transform: lifestyleOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}
+          >
+            ↓
+          </span>
         </button>
 
-        {lifestyleOpen && (
-          <div className="flex flex-col gap-4 pt-4">
-            <NumberInput label="Phone bill" id="phone" prefix={prefix} value={inputs.lifestyle.phone} onChange={v => setLifestyle({ phone: v })} />
-            <NumberInput label="Subscriptions" id="subscriptions" prefix={prefix} value={inputs.lifestyle.subscriptions} onChange={v => setLifestyle({ subscriptions: v })} />
-            <NumberInput label="Gym" id="gym" prefix={prefix} value={inputs.lifestyle.gym} onChange={v => setLifestyle({ gym: v })} />
-            <NumberInput label="Eating out" id="eating-out" prefix={prefix} value={inputs.lifestyle.eatingOut} onChange={v => setLifestyle({ eatingOut: v })} />
-            <NumberInput label="Personal care" id="personal-care" prefix={prefix} value={inputs.lifestyle.personalCare} onChange={v => setLifestyle({ personalCare: v })} />
-            <NumberInput label="Savings target" id="savings-target" prefix={prefix} value={inputs.lifestyle.savingsTarget} onChange={v => setLifestyle({ savingsTarget: v })} />
+        {/* CSS grid collapsible — smoother than max-height, no JS measurement */}
+        <div className={`collapsible-panel${lifestyleOpen ? ' open' : ''}`}>
+          <div className="collapsible-inner">
+            <div className="flex flex-col gap-4 pt-4 pb-1">
+              <NumberInput label="Phone bill" id="phone" prefix={prefix} value={inputs.lifestyle.phone} onChange={v => setLifestyle({ phone: v })} />
+              <NumberInput label="Subscriptions" id="subscriptions" prefix={prefix} value={inputs.lifestyle.subscriptions} onChange={v => setLifestyle({ subscriptions: v })} />
+              <NumberInput label="Gym" id="gym" prefix={prefix} value={inputs.lifestyle.gym} onChange={v => setLifestyle({ gym: v })} />
+              <NumberInput label="Eating out" id="eating-out" prefix={prefix} value={inputs.lifestyle.eatingOut} onChange={v => setLifestyle({ eatingOut: v })} />
+              <NumberInput label="Personal care" id="personal-care" prefix={prefix} value={inputs.lifestyle.personalCare} onChange={v => setLifestyle({ personalCare: v })} />
+              <NumberInput label="Savings target" id="savings-target" prefix={prefix} value={inputs.lifestyle.savingsTarget} onChange={v => setLifestyle({ savingsTarget: v })} />
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )

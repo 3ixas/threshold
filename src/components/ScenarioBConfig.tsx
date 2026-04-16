@@ -34,7 +34,7 @@ export default function ScenarioBConfig({ config, inputs, onChange, onExit }: Pr
         <button
           type="button"
           onClick={onExit}
-          className="text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors"
+          className="text-xs font-label uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors duration-150 active:opacity-60 active:transition-none"
           aria-label="Exit comparison mode"
         >
           Exit comparison

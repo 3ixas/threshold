@@ -43,7 +43,7 @@ interface TotalBlockProps {
 
 function TotalBlock({ label, value, currency, testId }: TotalBlockProps) {
   return (
-    <div className="bg-surface-container-low px-5 py-5 mb-4">
+    <div className="total-block bg-surface-container-low px-5 py-5 mb-4">
       <p className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-2">
         {label}
       </p>

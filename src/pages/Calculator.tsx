@@ -212,7 +212,7 @@ function LondonCalculator() {
                 <button
                   type="button"
                   onClick={enterComparison}
-                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-300"
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.97] active:transition-none"
                 >
                   Compare two scenarios
                 </button>
@@ -383,7 +383,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
                   depositNote="Must be held in a blocked bank account in your name (Art. 257e CO)"
                 />
                 <button type="button" onClick={enterComparison}
-                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-300">
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.97] active:transition-none">
                   Compare two scenarios
                 </button>
               </div>

@@ -36,16 +36,18 @@ describe('ConfigPanel', () => {
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ occupants: 2 }))
   })
 
-  it('renders lifestyle section collapsed by default', () => {
+  it('renders lifestyle section collapsed by default (aria-expanded false)', () => {
     render(<ConfigPanel config={london} inputs={baseInputs} onChange={() => {}} />)
-    // The lifestyle fields should not be visible initially
-    expect(screen.queryByLabelText(/gym/i)).not.toBeInTheDocument()
+    // Content stays in DOM for CSS animation; collapsed state is indicated by aria-expanded
+    const toggle = screen.getByRole('button', { name: /lifestyle costs/i })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('expands lifestyle section when the toggle is clicked', () => {
+  it('expands lifestyle section when the toggle is clicked (aria-expanded true)', () => {
     render(<ConfigPanel config={london} inputs={baseInputs} onChange={() => {}} />)
-    fireEvent.click(screen.getByText(/lifestyle costs/i))
-    expect(screen.getByLabelText(/gym/i)).toBeInTheDocument()
+    const toggle = screen.getByRole('button', { name: /lifestyle costs/i })
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
   })
 
   it('does not show health insurance field for London', () => {

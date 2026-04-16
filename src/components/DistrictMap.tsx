@@ -27,7 +27,7 @@ export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) 
 
     const bounds = getBoroughBounds(geojson, selectedCode)
     if (!bounds) return
-    map.fitBounds(bounds, { padding: 40, duration: 600 })
+    map.fitBounds(bounds, { padding: 40, duration: 400 })
 
     map.setFeatureState({ source: SOURCE, id: selectedCode }, { selected: true })
   }, [selectedCode, geojson])
@@ -102,6 +102,9 @@ export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) 
               '#e2e3db',
             ],
             'fill-opacity': 0.75,
+            // Smooth color transitions on hover/select
+            'fill-color-transition': { duration: 150, delay: 0 },
+            'fill-opacity-transition': { duration: 150, delay: 0 },
           }}
         />
         <Layer
