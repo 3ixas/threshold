@@ -1,5 +1,6 @@
 import type { MonthlyCosts, UpfrontCosts, Currency } from '../lib/types'
 import { calculateMonthlyCostsDiff } from '../lib/calculate'
+import { fmt } from '../lib/format'
 
 interface Props {
   monthlyA: MonthlyCosts
@@ -9,11 +10,6 @@ interface Props {
   currency: Currency
 }
 
-const symbol: Record<Currency, string> = { GBP: '£', CHF: 'CHF ' }
-
-function fmt(n: number, currency: Currency) {
-  return `${symbol[currency]}${Math.abs(Math.round(n)).toLocaleString('en-GB')}`
-}
 
 function DiffBadge({ diff, currency }: { diff: number; currency: Currency }) {
   if (Math.abs(diff) < 0.5) return <span className="text-xs text-on-surface-variant">—</span>

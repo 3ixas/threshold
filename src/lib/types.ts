@@ -2,6 +2,14 @@ export type CityId = 'london' | 'basel' | 'zurich'
 export type Currency = 'GBP' | 'CHF'
 export type PropertyType = 'room' | 'studio' | '1bed' | '2bed' | '3bed'
 
+export const PROPERTY_TYPE_OPTIONS: { value: PropertyType; label: string }[] = [
+  { value: 'room',   label: 'Room' },
+  { value: 'studio', label: 'Studio' },
+  { value: '1bed',   label: '1-bed' },
+  { value: '2bed',   label: '2-bed' },
+  { value: '3bed',   label: '3-bed' },
+]
+
 // ── District / neighbourhood ───────────────────
 
 export interface District {

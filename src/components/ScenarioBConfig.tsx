@@ -1,12 +1,5 @@
 import type { CityConfig, CalculatorInputs, PropertyType } from '../lib/types'
-
-const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
-  { value: 'room', label: 'Room' },
-  { value: 'studio', label: 'Studio' },
-  { value: '1bed', label: '1-bed' },
-  { value: '2bed', label: '2-bed' },
-  { value: '3bed', label: '3-bed' },
-]
+import { PROPERTY_TYPE_OPTIONS } from '../lib/types'
 
 const OCCUPANT_OPTIONS: { value: 1 | 2 | 3 | 4; label: string }[] = [
   { value: 1, label: 'Just me' },
@@ -67,7 +60,7 @@ export default function ScenarioBConfig({ config, inputs, onChange, onExit }: Pr
           onChange={e => set({ propertyType: e.target.value as PropertyType })}
           className="bg-background border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-accent"
         >
-          {PROPERTY_TYPES.map(p => (
+          {PROPERTY_TYPE_OPTIONS.map(p => (
             <option key={p.value} value={p.value}>{p.label}</option>
           ))}
         </select>

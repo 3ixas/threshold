@@ -35,7 +35,7 @@ function LondonCalculator() {
   const [inputs, setInputs] = useCalculatorState(london)
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const inComparisonMode = useMemo(() => hasScenarioB(searchParams), [searchParams])
+  const inComparisonMode = hasScenarioB(searchParams)
 
   const scenarioBInputs = useMemo(
     () => inComparisonMode ? deserialiseScenarioB(searchParams, london) : null,
@@ -122,10 +122,6 @@ function LondonCalculator() {
     setInputs({ ...inputs, transportOverride: annual ? annual / 12 : undefined })
   }, [inputs, setInputs])
 
-  const handleConfigChange = useCallback((updated: CalculatorInputs) => {
-    setInputs(updated)
-  }, [setInputs])
-
   const currentDistrict = getDistrictById(london, inputs.districtId)
 
   return (
@@ -191,7 +187,7 @@ function LondonCalculator() {
               <ConfigPanel
                 config={london}
                 inputs={inputs}
-                onChange={handleConfigChange}
+                onChange={setInputs}
               />
             </div>
 
@@ -280,7 +276,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
   const upfront = useMemo(() => calculateUpfront(config, inputs), [config, inputs])
   const suggestions = useMemo(() => generateSuggestions(inputs, config), [inputs, config])
 
-  const inComparisonMode = useMemo(() => hasScenarioB(searchParams), [searchParams])
+  const inComparisonMode = hasScenarioB(searchParams)
 
   const scenarioBInputs = useMemo(
     () => inComparisonMode ? deserialiseScenarioB(searchParams, config) : null,

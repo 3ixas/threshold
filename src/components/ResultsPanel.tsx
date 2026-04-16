@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { MonthlyCosts, UpfrontCosts, Currency } from '../lib/types'
+import { fmt } from '../lib/format'
 
 interface Props {
   monthly: MonthlyCosts
@@ -9,11 +10,6 @@ interface Props {
   depositNote?: string
 }
 
-const symbol: Record<Currency, string> = { GBP: '£', CHF: 'CHF ' }
-
-function fmt(n: number, currency: Currency): string {
-  return `${symbol[currency]}${Math.round(n).toLocaleString('en-GB')}`
-}
 
 interface LineItemProps {
   label: string

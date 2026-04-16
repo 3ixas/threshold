@@ -2,12 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { AffordabilityStatus } from '../lib/affordability'
 import type { AffordabilityResult } from '../lib/affordability'
 import type { CityId, Currency } from '../lib/types'
-
-const symbol: Record<Currency, string> = { GBP: '£', CHF: 'CHF ' }
-
-function fmt(n: number, currency: Currency) {
-  return `${symbol[currency]}${Math.abs(Math.round(n)).toLocaleString('en-GB')}`
-}
+import { fmt, currencySymbol } from '../lib/format'
 
 interface Props {
   takeHome: number
@@ -24,7 +19,7 @@ export default function AffordabilityPanel({
   onTakeHomeChange, onSavingsChange,
 }: Props) {
   const isSwiss = cityId === 'basel' || cityId === 'zurich'
-  const prefix = symbol[currency]
+  const prefix = currencySymbol[currency]
 
   return (
     <div className="flex flex-col gap-6">
