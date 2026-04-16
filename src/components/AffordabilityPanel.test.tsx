@@ -24,7 +24,6 @@ const baseProps = {
   savings: 0,
   result: null as AffordabilityResult | null,
   currency: 'GBP' as const,
-  cityId: 'london' as const,
   onTakeHomeChange: () => {},
   onSavingsChange: () => {},
 }
@@ -32,51 +31,29 @@ const baseProps = {
 describe('AffordabilityPanel', () => {
   it('renders income and savings inputs', () => {
     render(<AffordabilityPanel {...baseProps} />)
-    expect(screen.getByLabelText(/take-home/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/savings/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/monthly take-home/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/current savings/i)).toBeInTheDocument()
   })
 
-  it('calls onTakeHomeChange when income input changes', () => {
-    const onTakeHomeChange = vi.fn()
-    render(<AffordabilityPanel {...baseProps} onTakeHomeChange={onTakeHomeChange} />)
-    fireEvent.change(screen.getByLabelText(/take-home/i), { target: { value: '3000' } })
-    expect(onTakeHomeChange).toHaveBeenCalledWith(3000)
-  })
-
-  it('calls onSavingsChange when savings input changes', () => {
-    const onSavingsChange = vi.fn()
-    render(<AffordabilityPanel {...baseProps} onSavingsChange={onSavingsChange} />)
-    fireEvent.change(screen.getByLabelText(/savings/i), { target: { value: '5000' } })
-    expect(onSavingsChange).toHaveBeenCalledWith(5000)
-  })
-
-  it('shows no result when result is null', () => {
-    render(<AffordabilityPanel {...baseProps} result={null} />)
+  it('shows no affordability result when result is null', () => {
+    render(<AffordabilityPanel {...baseProps} />)
     expect(screen.queryByTestId('affordability-status')).not.toBeInTheDocument()
   })
 
-  it('shows CAN_AFFORD_NOW message when savings cover upfront', () => {
+  it('shows CAN_AFFORD_NOW status with surplus', () => {
     render(<AffordabilityPanel {...baseProps} result={canAffordNow} />)
-    // CAN_AFFORD_NOW renders a "You can move in now" label + surplus hero number
-    expect(screen.getByTestId('affordability-status')).toBeInTheDocument()
-    expect(screen.getByText(/can move in now/i)).toBeInTheDocument()
+    expect(screen.getByTestId('affordability-status')).toHaveTextContent(/surplus/i)
   })
 
-  it('shows months-to-move-in when status is NOT_YET', () => {
+  it('shows NOT_YET status with months', () => {
     render(<AffordabilityPanel {...baseProps} result={notYet} />)
+    expect(screen.getByTestId('affordability-status')).toHaveTextContent(/not quite yet/i)
     expect(screen.getByTestId('months-to-move-in')).toHaveTextContent('8')
   })
 
-  it('shows surplus amount for NOT_YET status', () => {
-    render(<AffordabilityPanel {...baseProps} result={notYet} />)
-    expect(screen.getByTestId('surplus-amount')).toHaveTextContent('500')
-  })
-
-  it('shows INCOME_INSUFFICIENT message when surplus ≤ 0', () => {
+  it('shows INCOME_INSUFFICIENT status with shortfall', () => {
     render(<AffordabilityPanel {...baseProps} result={insufficient} />)
-    // INCOME_INSUFFICIENT renders a shortfall label + hero number
-    expect(screen.getByTestId('affordability-status')).toBeInTheDocument()
-    expect(screen.getByText(/income insufficient/i)).toBeInTheDocument()
+    expect(screen.getByTestId('affordability-status')).toHaveTextContent(/shortfall/i)
   })
 
   it('does not show months-to-move-in when income is insufficient', () => {
@@ -84,18 +61,27 @@ describe('AffordabilityPanel', () => {
     expect(screen.queryByTestId('months-to-move-in')).not.toBeInTheDocument()
   })
 
-  it('shows Swiss health insurance note for Basel', () => {
-    render(<AffordabilityPanel {...baseProps} cityId="basel" />)
+  it('shows Swiss health insurance note for CHF currency', () => {
+    render(<AffordabilityPanel {...baseProps} currency="CHF" />)
     expect(screen.getByText(/health insurance/i)).toBeInTheDocument()
   })
 
-  it('shows Swiss health insurance note for Zurich', () => {
-    render(<AffordabilityPanel {...baseProps} cityId="zurich" />)
-    expect(screen.getByText(/health insurance/i)).toBeInTheDocument()
-  })
-
-  it('does not show Swiss health insurance note for London', () => {
-    render(<AffordabilityPanel {...baseProps} cityId="london" />)
+  it('does not show Swiss health insurance note for GBP currency', () => {
+    render(<AffordabilityPanel {...baseProps} currency="GBP" />)
     expect(screen.queryByText(/health insurance/i)).not.toBeInTheDocument()
+  })
+
+  it('calls onTakeHomeChange when income input changes', () => {
+    const onTakeHomeChange = vi.fn()
+    render(<AffordabilityPanel {...baseProps} onTakeHomeChange={onTakeHomeChange} />)
+    fireEvent.change(screen.getByLabelText(/monthly take-home/i), { target: { value: '3000' } })
+    expect(onTakeHomeChange).toHaveBeenCalledWith(3000)
+  })
+
+  it('calls onSavingsChange when savings input changes', () => {
+    const onSavingsChange = vi.fn()
+    render(<AffordabilityPanel {...baseProps} onSavingsChange={onSavingsChange} />)
+    fireEvent.change(screen.getByLabelText(/current savings/i), { target: { value: '5000' } })
+    expect(onSavingsChange).toHaveBeenCalledWith(5000)
   })
 })

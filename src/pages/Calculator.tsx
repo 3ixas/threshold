@@ -209,7 +209,7 @@ function LondonCalculator() {
                   monthly={monthly}
                   upfront={upfront}
                   currency="GBP"
-                  lastUpdated="April 2026"
+                  lastUpdated={new Date(london.lastUpdated).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
                 />
                 <button
                   type="button"
@@ -248,7 +248,6 @@ function LondonCalculator() {
                   savings={inputs.savings ?? 0}
                   result={affordability}
                   currency="GBP"
-                  cityId="london"
                   onTakeHomeChange={v => setInputs({ ...inputs, takeHome: v || undefined })}
                   onSavingsChange={v => setInputs({ ...inputs, savings: v || undefined })}
                 />
@@ -390,7 +389,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
               <div className="border-t border-outline-variant/20 pt-5">
                 <ResultsPanel
                   monthly={monthly} upfront={upfront} currency={currency}
-                  lastUpdated="April 2026"
+                  lastUpdated={new Date(config.lastUpdated).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
                   depositNote="Must be held in a blocked bank account in your name (Art. 257e CO)"
                 />
                 <button type="button" onClick={enterComparison}
@@ -411,7 +410,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
               <div className="border-t border-outline-variant/20 pt-5">
                 <AffordabilityPanel
                   takeHome={inputs.takeHome ?? 0} savings={inputs.savings ?? 0}
-                  result={affordability} currency={currency} cityId={config.id}
+                  result={affordability} currency={currency}
                   onTakeHomeChange={v => setInputs({ ...inputs, takeHome: v || undefined })}
                   onSavingsChange={v => setInputs({ ...inputs, savings: v || undefined })}
                 />

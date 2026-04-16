@@ -74,12 +74,16 @@ export function deserialise(params: URLSearchParams, config: CityConfig): Calcul
   }
 }
 
+type OverrideKey = keyof Pick<CalculatorInputs,
+  'food' | 'broadbandOverride' | 'movingCostsOverride' | 'furnitureBudgetOverride'
+  | 'transportOverride' | 'healthInsuranceOverride' | 'takeHome' | 'savings'>
+
 function optional(
   param: string,
   params: URLSearchParams,
-  key?: string,
-): Partial<CalculatorInputs> {
+  key?: OverrideKey,
+): Partial<Pick<CalculatorInputs, OverrideKey>> {
   const value = parsePositiveNumber(params.get(param))
   if (value === undefined) return {}
-  return { [key ?? param]: value } as Partial<CalculatorInputs>
+  return { [key ?? param]: value } as Partial<Pick<CalculatorInputs, OverrideKey>>
 }

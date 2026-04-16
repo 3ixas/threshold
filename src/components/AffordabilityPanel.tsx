@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { AffordabilityStatus } from '../lib/affordability'
 import type { AffordabilityResult } from '../lib/affordability'
-import type { CityId, Currency } from '../lib/types'
+import type { Currency } from '../lib/types'
 import { fmt, currencySymbol } from '../lib/format'
 
 interface Props {
@@ -9,16 +9,14 @@ interface Props {
   savings: number
   result: AffordabilityResult | null
   currency: Currency
-  cityId: CityId
   onTakeHomeChange: (value: number) => void
   onSavingsChange: (value: number) => void
 }
 
 export default function AffordabilityPanel({
-  takeHome, savings, result, currency, cityId,
+  takeHome, savings, result, currency,
   onTakeHomeChange, onSavingsChange,
 }: Props) {
-  const isSwiss = cityId === 'basel' || cityId === 'zurich'
   const prefix = currencySymbol[currency]
 
   return (
@@ -50,7 +48,7 @@ export default function AffordabilityPanel({
               className="flex-1 bg-transparent text-sm font-body tabular-nums text-on-surface py-2 pr-2 focus:outline-none text-right"
             />
           </div>
-          {isSwiss && (
+          {currency === 'CHF' && (
             <p className="text-xs font-body text-on-surface-variant/60 mt-0.5">
               Don't include health insurance in your take-home — we've already counted it above.
             </p>
