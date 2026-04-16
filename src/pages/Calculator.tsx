@@ -9,7 +9,7 @@ import zurich from '../data/zurich'
 import zurichKreise from '../data/zurich-kreise'
 import { useCalculatorState } from '../lib/useCalculatorState'
 import { calculateUpfront, calculateMonthly } from '../lib/calculate'
-import { getDistrictById, getZoneForDistrict, getBoroughBounds } from '../lib/districts'
+import { getDistrictById, getZoneForDistrict } from '../lib/districts'
 import { serialise, deserialise } from '../lib/url-state'
 import { serialiseScenarioB, deserialiseScenarioB, hasScenarioB, mergeScenariosIntoParams } from '../lib/comparison'
 import DistrictMap from '../components/DistrictMap'
@@ -125,11 +125,6 @@ function LondonCalculator() {
   const handleConfigChange = useCallback((updated: CalculatorInputs) => {
     setInputs(updated)
   }, [setInputs])
-
-  // fitBounds when district changes via dropdown
-  useMemo(() => {
-    void getBoroughBounds(londonBoroughs, selectedOnsCode ?? '')
-  }, [selectedOnsCode])
 
   const currentDistrict = getDistrictById(london, inputs.districtId)
 
