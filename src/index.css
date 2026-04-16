@@ -70,6 +70,18 @@
   --color-on-tertiary-fixed: #374254;
   --color-on-tertiary-fixed-variant: #535e71;
 
+  /* Accent — warm amber, one intentional accent across the whole product */
+  --color-accent: #b87941;
+  --color-accent-dim: #9c6433;
+  --color-accent-muted: #f5e9d8;
+  --color-on-accent: #fff5ec;
+
+  /* Positive — muted sage green, used only for affordability CAN_AFFORD_NOW */
+  --color-positive: #4d7a5e;
+  --color-positive-dim: #3d6049;
+  --color-positive-muted: #e4f0e9;
+  --color-on-positive: #f2faf5;
+
   /* Error — warm terracotta for negative affordability signals */
   --color-error: #9e422c;
   --color-error-dim: #5c1202;
@@ -96,6 +108,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background-color: #fbf9f5;
@@ -118,6 +134,18 @@ p {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+/* ── Film-grain texture — fixed, pointer-events-none, GPU-safe ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 192px 192px;
 }
 
 /* ── Interactive element defaults ───────────────────────────── */

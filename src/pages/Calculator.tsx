@@ -140,7 +140,7 @@ function LondonCalculator() {
         <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">
           Threshold
         </Link>
-        <span className="text-outline-variant/50 select-none">·</span>
+        <span className="select-none" style={{ color: '#b87941', opacity: 0.7 }}>·</span>
         <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
           London
         </span>
@@ -223,7 +223,7 @@ function LondonCalculator() {
                 <button
                   type="button"
                   onClick={enterComparison}
-                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.96] active:transition-none"
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-accent hover:bg-accent-muted transition-[background-color,color] duration-200 active:scale-[0.96] active:transition-none"
                 >
                   Compare two scenarios
                 </button>
@@ -347,7 +347,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
         <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">Threshold</Link>
-        <span className="text-outline-variant/50 select-none">·</span>
+        <span className="select-none" style={{ color: '#b87941', opacity: 0.7 }}>·</span>
         <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{config.name}</span>
         <Link
           to="/"
@@ -406,7 +406,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
                   depositNote="Must be held in a blocked bank account in your name (Art. 257e CO)"
                 />
                 <button type="button" onClick={enterComparison}
-                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-[background-color,color] duration-150 active:scale-[0.96] active:transition-none">
+                  className="mt-6 w-full py-3 bg-surface-container text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-accent hover:bg-accent-muted transition-[background-color,color] duration-200 active:scale-[0.96] active:transition-none">
                   Compare two scenarios
                 </button>
               </div>

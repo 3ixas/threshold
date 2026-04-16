@@ -37,7 +37,7 @@ function NumberInput({ label, id, value, prefix = '£', onChange }: NumberInputP
       <label htmlFor={id} className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
         {label}
       </label>
-      <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
+      <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-accent">
         <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
         <input
           id={id}
@@ -73,7 +73,7 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
           id="property-type"
           value={inputs.propertyType}
           onChange={e => set({ propertyType: e.target.value as PropertyType })}
-          className="bg-surface-container border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-primary"
+          className="bg-surface-container border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-accent"
         >
           {PROPERTY_TYPES.map(p => (
             <option key={p.value} value={p.value}>{p.label}</option>
@@ -90,7 +90,7 @@ export default function ConfigPanel({ config, inputs, onChange }: Props) {
           id="living-arrangement"
           value={String(inputs.occupants)}
           onChange={e => set({ occupants: Number(e.target.value) as 1 | 2 | 3 | 4 })}
-          className="bg-surface-container border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-primary"
+          className="bg-surface-container border-b border-outline-variant text-on-surface font-body text-sm px-2 py-2 focus:outline-none focus:border-accent"
         >
           {ARRANGEMENTS.map((a, i) => (
             <option key={i} value={String(a.value)}>{a.label}</option>

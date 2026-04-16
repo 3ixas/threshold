@@ -43,7 +43,7 @@ export default function AffordabilityPanel({
           <label htmlFor="take-home" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
             Monthly take-home pay
           </label>
-          <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
+          <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-accent">
             <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
             <input
               id="take-home"
@@ -66,7 +66,7 @@ export default function AffordabilityPanel({
           <label htmlFor="savings-input" className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
             Current savings
           </label>
-          <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-primary">
+          <div className="flex items-center bg-surface-container border-b border-outline-variant focus-within:border-accent">
             <span className="text-sm font-body text-on-surface-variant px-2">{prefix}</span>
             <input
               id="savings-input"
@@ -93,21 +93,25 @@ export default function AffordabilityPanel({
           className="border-t border-outline-variant/20 pt-5"
         >
           {result.status === AffordabilityStatus.CAN_AFFORD_NOW && (
-            <div className="bg-surface-container-low px-5 py-5">
-              <p className="text-[10px] font-label uppercase tracking-widest text-tertiary mb-2">
-                You can move in now
-              </p>
-              <motion.p
-                key={Math.round(result.surplus)}
-                data-testid="affordability-status"
-                initial={{ opacity: 0.5, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ type: 'spring', stiffness: 600, damping: 38 }}
-                className="text-4xl font-headline tabular-nums text-tertiary leading-none"
-              >
-                {fmt(result.surplus, currency)}
-                <span className="text-base font-label ml-2 tracking-wider">/mo surplus</span>
-              </motion.p>
+            /* Double-bezel for the positive state — mirrors TotalBlock premium treatment */
+            <div className="border border-outline-variant/20 p-[3px]">
+              <div className="bg-positive-muted px-5 py-5">
+                <p className="text-[10px] font-label uppercase tracking-widest mb-2" style={{ color: '#4d7a5e' }}>
+                  You can move in now
+                </p>
+                <motion.p
+                  key={Math.round(result.surplus)}
+                  data-testid="affordability-status"
+                  initial={{ opacity: 0.5, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 600, damping: 38 }}
+                  className="text-4xl font-headline tabular-nums leading-none"
+                  style={{ color: '#4d7a5e' }}
+                >
+                  {fmt(result.surplus, currency)}
+                  <span className="text-base font-label ml-2 tracking-wider">/mo surplus</span>
+                </motion.p>
+              </div>
             </div>
           )}
 
@@ -128,13 +132,13 @@ export default function AffordabilityPanel({
                   {result.monthsToMoveIn}
                 </motion.p>
               </div>
-              {/* Explain the gap so users understand why they're not CAN_AFFORD_NOW */}
+              {/* Upfront shortfall in amber — makes the gap immediately visible */}
               {result.upfrontShortfall !== undefined && (
                 <div className="flex justify-between items-baseline">
                   <span className="text-xs font-label uppercase tracking-wider text-on-surface-variant">
                     Still need for upfront
                   </span>
-                  <span className="text-sm font-body tabular-nums text-on-surface">
+                  <span className="text-sm font-body tabular-nums" style={{ color: '#b87941' }}>
                     {fmt(result.upfrontShortfall, currency)}
                   </span>
                 </div>
