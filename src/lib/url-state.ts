@@ -30,6 +30,8 @@ export function serialise(inputs: CalculatorInputs): URLSearchParams {
   if (inputs.furnitureBudgetOverride !== undefined) params.set('furniture', String(inputs.furnitureBudgetOverride))
   if (inputs.transportOverride !== undefined)     params.set('transport', String(inputs.transportOverride))
   if (inputs.healthInsuranceOverride !== undefined) params.set('health', String(inputs.healthInsuranceOverride))
+  if (inputs.takeHome !== undefined)              params.set('income', String(inputs.takeHome))
+  if (inputs.savings !== undefined)               params.set('cash', String(inputs.savings))
 
   return params
 }
@@ -67,6 +69,8 @@ export function deserialise(params: URLSearchParams, config: CityConfig): Calcul
     ...optional('furniture', params, 'furnitureBudgetOverride'),
     ...optional('transport', params, 'transportOverride'),
     ...optional('health', params, 'healthInsuranceOverride'),
+    ...optional('income', params, 'takeHome'),
+    ...optional('cash', params, 'savings'),
   }
 }
 

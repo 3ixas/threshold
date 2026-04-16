@@ -9,6 +9,8 @@ import DistrictMap from '../components/DistrictMap'
 import DistrictSelect from '../components/DistrictSelect'
 import ConfigPanel from '../components/ConfigPanel'
 import ResultsPanel from '../components/ResultsPanel'
+import AffordabilityPanel from '../components/AffordabilityPanel'
+import { calculateAffordability } from '../lib/affordability'
 import type { CalculatorInputs } from '../lib/types'
 
 interface CalculatorProps {
@@ -23,6 +25,15 @@ function LondonCalculator() {
   // Compute results reactively from inputs — no submit button
   const monthly = useMemo(() => calculateMonthly(london, inputs), [inputs])
   const upfront = useMemo(() => calculateUpfront(london, inputs), [inputs])
+  const affordability = useMemo(() => {
+    if (!inputs.takeHome) return null
+    return calculateAffordability({
+      takeHome: inputs.takeHome,
+      savings: inputs.savings ?? 0,
+      monthlyTotal: monthly.total,
+      upfrontTotal: upfront.total,
+    })
+  }, [inputs.takeHome, inputs.savings, monthly.total, upfront.total])
 
   // Map the selected district to its ONS code (needed by DistrictMap)
   const selectedOnsCode = useMemo(() => {
@@ -139,6 +150,19 @@ function LondonCalculator() {
                 upfront={upfront}
                 currency="GBP"
                 lastUpdated="April 2026"
+              />
+            </div>
+
+            {/* Affordability layer */}
+            <div className="border-t border-outline-variant/20 pt-6">
+              <AffordabilityPanel
+                takeHome={inputs.takeHome ?? 0}
+                savings={inputs.savings ?? 0}
+                result={affordability}
+                currency="GBP"
+                cityId="london"
+                onTakeHomeChange={v => setInputs({ ...inputs, takeHome: v || undefined })}
+                onSavingsChange={v => setInputs({ ...inputs, savings: v || undefined })}
               />
             </div>
           </div>

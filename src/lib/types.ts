@@ -65,6 +65,10 @@ export interface CalculatorInputs {
   transportOverride?: number
   /** Overrides city default health insurance (Swiss) */
   healthInsuranceOverride?: number
+  /** Monthly net take-home pay (optional affordability input) */
+  takeHome?: number
+  /** Current savings (optional affordability input) */
+  savings?: number
 }
 
 // ── Calculation outputs ────────────────────────
