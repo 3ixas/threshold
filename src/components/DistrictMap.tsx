@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react'
 import Map, { Source, Layer, type MapRef, type MapLayerMouseEvent } from 'react-map-gl/maplibre'
-import type { FeatureCollection, Polygon, MultiPolygon } from 'geojson'
-import { getBoroughBounds } from '../lib/districts'
-
-type BoroughGeoJSON = FeatureCollection<Polygon | MultiPolygon, { code: string; name: string }>
+import { getBoroughBounds, type DistrictGeoJSON } from '../lib/districts'
 
 interface Props {
-  geojson: BoroughGeoJSON
+  geojson: DistrictGeoJSON
   /** ONS code of the selected borough (E09xxxxxx) */
   selectedCode: string | null
   onSelect: (onsCode: string) => void

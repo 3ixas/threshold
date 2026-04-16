@@ -9,11 +9,11 @@ export function getZoneForDistrict(config: CityConfig, districtId: string): numb
   return getDistrictById(config, districtId)?.tflZone
 }
 
-type BoroughGeoJSON = FeatureCollection<Polygon | MultiPolygon, { code: string; name: string }>
+export type DistrictGeoJSON = FeatureCollection<Polygon | MultiPolygon, { code: string; name: string }>
 
-/** Returns [minLng, minLat, maxLng, maxLat] for the borough with the given ONS code. */
+/** Returns [minLng, minLat, maxLng, maxLat] for the district with the given code. */
 export function getBoroughBounds(
-  geojson: BoroughGeoJSON,
+  geojson: DistrictGeoJSON,
   onsCode: string,
 ): [number, number, number, number] | undefined {
   const feature = geojson.features.find(f => f.properties.code === onsCode)

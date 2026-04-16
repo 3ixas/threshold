@@ -9,7 +9,7 @@ import zurich from '../data/zurich'
 import zurichKreise from '../data/zurich-kreise'
 import { useCalculatorState } from '../lib/useCalculatorState'
 import { calculateUpfront, calculateMonthly } from '../lib/calculate'
-import { getDistrictById, getZoneForDistrict } from '../lib/districts'
+import { getDistrictById, getZoneForDistrict, type DistrictGeoJSON } from '../lib/districts'
 import { serialise, deserialise } from '../lib/url-state'
 import { serialiseScenarioB, deserialiseScenarioB, hasScenarioB, mergeScenariosIntoParams } from '../lib/comparison'
 import DistrictMap from '../components/DistrictMap'
@@ -23,7 +23,6 @@ import ComparisonResults from '../components/ComparisonResults'
 import { calculateAffordability } from '../lib/affordability'
 import { generateSuggestions } from '../lib/suggestions'
 import type { CalculatorInputs, CityConfig } from '../lib/types'
-import type { FeatureCollection, Polygon, MultiPolygon } from 'geojson'
 
 interface CalculatorProps {
   city: 'london' | 'basel' | 'zurich'
@@ -267,12 +266,9 @@ function LondonCalculator() {
 
 // ── Swiss calculator (Basel + Zurich) ────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SwissGeoJSON = FeatureCollection<Polygon | MultiPolygon, any>
-
 interface SwissCalculatorProps {
   config: CityConfig
-  geojson: SwissGeoJSON
+  geojson: DistrictGeoJSON
 }
 
 function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
@@ -355,7 +351,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="w-full h-[40vh] md:h-[320px] shrink-0 relative">
-          <DistrictMap geojson={geojson as Parameters<typeof DistrictMap>[0]['geojson']} selectedCode={selectedCode} onSelect={handleMapSelect} />
+          <DistrictMap geojson={geojson} selectedCode={selectedCode} onSelect={handleMapSelect} />
         </div>
 
         <motion.div
