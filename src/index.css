@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-headline: "Newsreader", serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  /* Border radius — 0px everywhere, non-negotiable */
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-full: 0px;
+
+  /* Page ground */
+  --color-background: #fbf9f5;
+  --color-surface: #fbf9f5;
+  --color-surface-bright: #fbf9f5;
+
+  /* Surface tiers — tonal layering, no shadows */
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f4ef;
+  --color-surface-container: #eeeee8;
+  --color-surface-container-high: #e8e9e1;
+  --color-surface-container-highest: #e2e3db;
+  --color-surface-variant: #e2e3db;
+  --color-surface-dim: #d9dbd2;
+
+  /* Text */
+  --color-on-background: #31332e;
+  --color-on-surface: #31332e;
+  --color-on-surface-variant: #5d605a;
+  --color-inverse-on-surface: #9e9d99;
+
+  /* Primary — interactive elements, active states */
+  --color-primary: #625d5b;
+  --color-primary-dim: #56514f;
+  --color-primary-container: #e9e1dd;
+  --color-primary-fixed: #e9e1dd;
+  --color-primary-fixed-dim: #dad3cf;
+  --color-on-primary: #fef6f2;
+  --color-on-primary-container: #55514e;
+  --color-on-primary-fixed: #433e3c;
+  --color-on-primary-fixed-variant: #5f5b58;
+  --color-inverse-primary: #ffffff;
+  --color-surface-tint: #625d5b;
+
+  /* Secondary */
+  --color-secondary: #645e59;
+  --color-secondary-dim: #58524d;
+  --color-secondary-container: #eae1da;
+  --color-secondary-fixed: #eae1da;
+  --color-secondary-fixed-dim: #dcd3cd;
+  --color-on-secondary: #fff7f4;
+  --color-on-secondary-container: #57514c;
+  --color-on-secondary-fixed: #443e3a;
+  --color-on-secondary-fixed-variant: #615a56;
+
+  /* Tertiary — trust/data accent (Muted Slate) */
+  --color-tertiary: #546073;
+  --color-tertiary-dim: #495467;
+  --color-tertiary-container: #dae6fd;
+  --color-tertiary-fixed: #dae6fd;
+  --color-tertiary-fixed-dim: #ccd8ef;
+  --color-on-tertiary: #f8f8ff;
+  --color-on-tertiary-container: #495467;
+  --color-on-tertiary-fixed: #374254;
+  --color-on-tertiary-fixed-variant: #535e71;
+
+  /* Error — warm terracotta for negative affordability signals */
+  --color-error: #9e422c;
+  --color-error-dim: #5c1202;
+  --color-error-container: #fe8b70;
+  --color-on-error: #fff7f6;
+  --color-on-error-container: #742410;
+
+  /* Structure */
+  --color-outline: #797c75;
+  --color-outline-variant: #b1b3ab;
+  --color-inverse-surface: #0e0e0c;
+}
+
+/* Base resets */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #fbf9f5;
+  color: #31332e;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
