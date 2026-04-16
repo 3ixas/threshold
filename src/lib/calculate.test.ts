@@ -37,6 +37,7 @@ const londonStub: CityConfig = {
     tvLicence: 13.25,
   },
   tflAnnualCosts: { 1: 1200, 2: 1800, 3: 2400 },
+  mapCenter: { longitude: -0.12, latitude: 51.50, zoom: 9.5 },
 }
 
 const swissStub: CityConfig = {
@@ -63,6 +64,7 @@ const swissStub: CityConfig = {
     healthInsurance: 420,
     mediaFee: 9.35,
   },
+  mapCenter: { longitude: 7.59, latitude: 47.56, zoom: 12 },
 }
 
 const baseInputs: CalculatorInputs = {

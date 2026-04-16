@@ -50,6 +50,7 @@ const config: CityConfig = {
     tvLicence: 15,
   },
   tflAnnualCosts: { 1: 1788, 2: 1788, 3: 2100, 4: 2568 },
+  mapCenter: { longitude: -0.12, latitude: 51.50, zoom: 9.5 },
 }
 
 const baseInputs: CalculatorInputs = {

@@ -26,6 +26,7 @@ const zurich: CityConfig = {
   name: 'Zurich',
   currency: 'CHF',
   lastUpdated: '2026-04-01',
+  mapCenter: { longitude: 8.54, latitude: 47.38, zoom: 12 },
   depositRule: 'three_months',
 
   defaults: {

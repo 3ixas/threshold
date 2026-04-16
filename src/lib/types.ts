@@ -42,6 +42,7 @@ export interface CityConfig {
   depositRule: 'five_weeks' | 'three_months'
   tflAnnualCosts?: Partial<Record<1 | 2 | 3 | 4 | 5 | 6, number>>
   lastUpdated: string
+  mapCenter: { longitude: number; latitude: number; zoom: number }
 }
 
 // ── Calculator inputs ──────────────────────────

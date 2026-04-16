@@ -27,6 +27,7 @@ const london: CityConfig = {
   name: 'London',
   currency: 'GBP',
   lastUpdated: '2026-04-01',
+  mapCenter: { longitude: -0.12, latitude: 51.50, zoom: 9.5 },
   depositRule: 'five_weeks',
 
   defaults: {

@@ -2,37 +2,51 @@ import { useCallback, useEffect, useRef } from 'react'
 import Map, { Source, Layer, type MapRef, type MapLayerMouseEvent } from 'react-map-gl/maplibre'
 import { getBoroughBounds, type DistrictGeoJSON } from '../lib/districts'
 
+interface ViewState {
+  longitude: number
+  latitude: number
+  zoom: number
+}
+
 interface Props {
   geojson: DistrictGeoJSON
-  /** ONS code of the selected borough (E09xxxxxx) */
   selectedCode: string | null
-  onSelect: (onsCode: string) => void
+  onSelect: (code: string) => void
+  initialViewState?: ViewState
 }
 
 const FILL_LAYER = 'district-fill'
 const LINE_LAYER = 'district-line'
 const SOURCE = 'districts'
 
-export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) {
+const LONDON_VIEW: ViewState = { longitude: -0.12, latitude: 51.50, zoom: 9.5 }
+
+export default function DistrictMap({ geojson, selectedCode, onSelect, initialViewState = LONDON_VIEW }: Props) {
   const mapRef = useRef<MapRef>(null)
   const hoveredId = useRef<string | null>(null)
 
-  // Fly to selected borough whenever selectedCode changes externally (e.g. dropdown)
-  useEffect(() => {
+  const fitToSelected = useCallback((animated: boolean) => {
     const map = mapRef.current?.getMap()
     if (!map || !selectedCode) return
-
     const bounds = getBoroughBounds(geojson, selectedCode)
     if (!bounds) return
-    map.fitBounds(bounds, { padding: 40, duration: 400 })
-
+    map.fitBounds(bounds, { padding: 40, duration: animated ? 400 : 0 })
     map.setFeatureState({ source: SOURCE, id: selectedCode }, { selected: true })
-  }, [selectedCode, geojson])
+  }, [geojson, selectedCode])
+
+  // On map load: immediately fit to the initially selected district (no animation)
+  const onLoad = useCallback(() => fitToSelected(false), [fitToSelected])
+
+  // On selectedCode change after load: animated fit
+  useEffect(() => {
+    const map = mapRef.current?.getMap()
+    if (!map || !map.loaded()) return
+    fitToSelected(true)
+  }, [fitToSelected])
 
   const onMouseMove = useCallback((e: MapLayerMouseEvent) => {
     const map = mapRef.current?.getMap()
     if (!map) return
-
     if (hoveredId.current) {
       map.setFeatureState({ source: SOURCE, id: hoveredId.current }, { hover: false })
     }
@@ -57,8 +71,6 @@ export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) 
     const feature = e.features?.[0]
     if (!feature?.id) return
     const id = String(feature.id)
-
-    // Clear previous selected state
     const map = mapRef.current?.getMap()
     if (map && selectedCode && selectedCode !== id) {
       map.setFeatureState({ source: SOURCE, id: selectedCode }, { selected: false })
@@ -72,10 +84,11 @@ export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) 
   return (
     <Map
       ref={mapRef}
-      initialViewState={{ longitude: -0.12, latitude: 51.50, zoom: 9.5 }}
+      initialViewState={initialViewState}
       style={{ width: '100%', height: '100%' }}
       mapStyle="https://tiles.openfreemap.org/styles/positron"
       interactiveLayerIds={[FILL_LAYER]}
+      onLoad={onLoad}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
@@ -99,7 +112,6 @@ export default function DistrictMap({ geojson, selectedCode, onSelect }: Props) 
               '#e2e3db',
             ],
             'fill-opacity': 0.75,
-            // Smooth color transitions on hover/select
             'fill-color-transition': { duration: 150, delay: 0 },
             'fill-opacity-transition': { duration: 150, delay: 0 },
           }}

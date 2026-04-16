@@ -15,6 +15,7 @@ const config: CityConfig = {
   ],
   defaults: { transport: 150, utilities: 140, broadband: 35, food: 300, contentsInsurance: 15, movingCosts: 800, furnitureBudget: 2000, tvLicence: 15 },
   tflAnnualCosts: { 2: 1788 },
+  mapCenter: { longitude: -0.12, latitude: 51.50, zoom: 9.5 },
 }
 
 const inputsB: CalculatorInputs = {

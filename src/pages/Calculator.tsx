@@ -152,6 +152,7 @@ function LondonCalculator() {
             geojson={londonBoroughs}
             selectedCode={selectedOnsCode}
             onSelect={handleMapSelect}
+            initialViewState={london.mapCenter}
           />
         </div>
 
@@ -347,7 +348,7 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="w-full h-[40vh] md:h-[320px] shrink-0 relative">
-          <DistrictMap geojson={geojson} selectedCode={selectedCode} onSelect={handleMapSelect} />
+          <DistrictMap geojson={geojson} selectedCode={selectedCode} onSelect={handleMapSelect} initialViewState={config.mapCenter} />
         </div>
 
         <motion.div

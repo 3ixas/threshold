@@ -26,6 +26,7 @@ const basel: CityConfig = {
   name: 'Basel',
   currency: 'CHF',
   lastUpdated: '2026-04-01',
+  mapCenter: { longitude: 7.59, latitude: 47.56, zoom: 12 },
   depositRule: 'three_months',
 
   defaults: {
