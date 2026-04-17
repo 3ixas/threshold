@@ -1,73 +1,101 @@
-# React + TypeScript + Vite
+# Threshold
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**The real cost of moving out** — a rental affordability calculator for London, Basel, and Zurich.
 
-Currently, two official plugins are available:
+Select a city and district, set your living situation, and get an instant breakdown of what it actually costs to move out: upfront on day one and every month after.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+![Landing page](docs/screenshot-landing.png)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What it does
 
-## Expanding the ESLint configuration
+Most rent calculators stop at the monthly rent figure. Threshold doesn't.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Enter your borough or district and Threshold builds the full picture:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Upfront costs | Monthly costs |
+|---|---|
+| Security deposit (5 weeks / 3 months) | Rent |
+| First month's rent | Council tax / no equivalent |
+| Moving costs | Utilities |
+| Furniture & setup | Broadband |
+| | Transport (TfL zone-aware for London) |
+| | Health insurance (Swiss cities) |
+| | TV licence / Serafe media fee |
+| | Contents insurance |
+| | Food & lifestyle |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Results update instantly — no submit button. Every configuration is encoded in the URL so any scenario is fully shareable.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshot-calculator.png" alt="District map and controls" /></td>
+    <td width="50%"><img src="docs/screenshot-costs.png" alt="Cost breakdown" /></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Interactive district map with borough selection</em></td>
+    <td align="center"><em>Full upfront and monthly cost breakdown</em></td>
+  </tr>
+</table>
+
+---
+
+## Cities
+
+| City | Currency | Districts | Transport |
+|------|----------|-----------|-----------|
+| **London** | GBP | 33 boroughs (ONS boundaries) | TfL zone-aware annual Travelcard pricing |
+| **Basel** | CHF | 7 grouped districts | BVB/TNW U-Abo flat rate |
+| **Zurich** | CHF | 12 Stadtkreise | ZVV NetworkPass zone 110 |
+
+Cost data sourced from ONS, Numbeo, official transport operators, and government statistics. Last updated April 2026.
+
+---
+
+## Stack
+
+- **Vite + React 19 + TypeScript** (strict mode)
+- **Tailwind CSS v4** via `@tailwindcss/vite` — no PostCSS config
+- **framer-motion** — animation system with `prefers-reduced-motion` support
+- **react-map-gl + MapLibre GL** — interactive district maps
+- **React Router 7** — file-based routing with lazy-loaded pages
+- **Vitest + Testing Library** — 182 tests, pure functions, no mocks
+
+**Key architectural principle:** all calculator state lives in the URL. No Redux, no Zustand, no Context — just `URLSearchParams` serialised on every input change. Any configuration is a shareable link.
+
+---
+
+## Getting started
+
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # TypeScript check + production build
+npm run test       # run all 182 tests
+npm run lint       # ESLint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── data/           # City configs (rent, costs, map centre) + GeoJSON boundaries
+├── lib/            # Pure calculation functions + URL state serialisation
+│   ├── calculate.ts        # Monthly and upfront cost engine
+│   ├── affordability.ts    # CAN_AFFORD_NOW / NOT_YET / INCOME_INSUFFICIENT
+│   ├── suggestions.ts      # "What if" cost-saving suggestions
+│   └── url-state.ts        # Serialise/deserialise inputs ↔ URLSearchParams
+├── components/     # DistrictMap, ConfigPanel, AffordabilityPanel, etc.
+└── pages/          # Landing, Calculator (LondonCalculator + SwissCalculator)
+```
+
+---
+
+*Not financial advice.*
