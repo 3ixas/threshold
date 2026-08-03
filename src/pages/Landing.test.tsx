@@ -1,13 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
 import Landing from './Landing'
 
 function renderLanding() {
-  return render(
-    <MemoryRouter>
-      <Landing />
-    </MemoryRouter>
-  )
+  return render(<Landing />)
 }
 
 describe('Landing page', () => {

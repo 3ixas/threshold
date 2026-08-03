@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
-import { Link } from 'react-router-dom'
 
 const CITIES = [
   { name: 'London',  region: 'England',      currency: 'GBP', to: '/london' },
@@ -61,8 +60,8 @@ function CityRow({ name, region, currency, to, index, hoveredIndex, setHoveredIn
         style={{ x: sx, y: sy }}
         onMouseMove={onMouseMove}
       >
-        <Link
-          to={to}
+        <a
+          href={to}
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={onMouseLeave}
           className="group flex items-center justify-between border-b border-white/10 py-5 md:py-7 active:transition-none"
@@ -113,7 +112,7 @@ function CityRow({ name, region, currency, to, index, hoveredIndex, setHoveredIn
               arrow_forward
             </span>
           </div>
-        </Link>
+        </a>
       </motion.div>
     </motion.div>
   )

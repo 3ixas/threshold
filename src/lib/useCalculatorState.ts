@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from './useSearchParams'
 import type { CalculatorInputs, CityConfig } from './types'
 import { serialise, deserialise } from './url-state'
 
