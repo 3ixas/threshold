@@ -2,100 +2,84 @@
 
 **The real cost of moving out** — a rental affordability calculator for London, Basel, and Zurich.
 
-Select a city and district, set your living situation, and get an instant breakdown of what it actually costs to move out: upfront on day one and every month after.
+[Use the live calculator](https://threshold-beta.vercel.app) · [![CI](https://github.com/3ixas/threshold/actions/workflows/ci.yml/badge.svg)](https://github.com/3ixas/threshold/actions/workflows/ci.yml)
 
-![Landing page](docs/screenshot-landing.png)
+Select a city and district, set your living situation, and get an immediate breakdown of the money needed on day one and each month after.
 
----
+![Threshold landing page introducing the rental affordability calculator](docs/screenshot-landing.png)
 
-## What it does
+## What it calculates
 
-Most rent calculators stop at the monthly rent figure. Threshold doesn't.
-
-Enter your borough or district and Threshold builds the full picture:
+Most rent calculators stop at monthly rent. Threshold combines rent with the other costs that determine whether moving is actually affordable:
 
 | Upfront costs | Monthly costs |
 |---|---|
-| Security deposit (5 weeks / 3 months) | Rent |
-| First month's rent | Council tax / no equivalent |
-| Moving costs | Utilities |
-| Furniture & setup | Broadband |
-| | Transport (TfL zone-aware for London) |
-| | Health insurance (Swiss cities) |
-| | TV licence / Serafe media fee |
-| | Contents insurance |
-| | Food & lifestyle |
+| Security deposit | Rent |
+| First month's rent | Council tax or local equivalent |
+| Moving costs | Utilities and broadband |
+| Furniture and setup | Transport |
+| | Health insurance where applicable |
+| | Media fees, contents insurance, food, and lifestyle |
 
-Results update instantly — no submit button. Every configuration is encoded in the URL so any scenario is fully shareable.
-
----
-
-## Screenshots
+Results update without a submit step. Every configuration is encoded in the URL, so a scenario can be bookmarked, shared, and restored without an account or backend.
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshot-calculator.png" alt="District map and controls" /></td>
-    <td width="50%"><img src="docs/screenshot-costs.png" alt="Cost breakdown" /></td>
-  </tr>
-  <tr>
-    <td align="center"><em>Interactive district map with borough selection</em></td>
-    <td align="center"><em>Full upfront and monthly cost breakdown</em></td>
+    <td width="50%"><img src="docs/screenshot-calculator.png" alt="Threshold district map and household cost controls" /></td>
+    <td width="50%"><img src="docs/screenshot-costs.png" alt="Threshold upfront and monthly cost breakdown" /></td>
   </tr>
 </table>
 
----
+## Engineering decisions
 
-## Cities
+- **URL as application state:** calculator inputs are serialised to `URLSearchParams`, avoiding a global client store while making every scenario shareable.
+- **Pure calculation core:** affordability, cost, comparison, and suggestion logic stays separate from React and is covered by unit tests without network mocks.
+- **Configuration by city:** rent, transport, tax, insurance, and district geometry are represented as typed city data rather than spread through UI components.
+- **Progressive loading:** routes and map code are loaded only when needed, keeping the landing route smaller.
 
-| City | Currency | Districts | Transport |
-|------|----------|-----------|-----------|
-| **London** | GBP | 33 boroughs (ONS boundaries) | TfL zone-aware annual Travelcard pricing |
-| **Basel** | CHF | 7 grouped districts | BVB/TNW U-Abo flat rate |
-| **Zurich** | CHF | 12 Stadtkreise | ZVV NetworkPass zone 110 |
+## Data and limitations
 
-Cost data sourced from ONS, Numbeo, official transport operators, and government statistics. Last updated April 2026.
+The bundled data was last reviewed in **April 2026**:
 
----
+- London rent uses ONS Private Rental Market Statistics for 2025; borough boundaries use ONS geography data; transport uses published TfL fares.
+- Basel and Zurich use Numbeo city baselines with district-level price relativities; transport uses published TNW and ZVV prices.
+- Local deposit rules, council tax, Swiss health insurance, utilities, and recurring fees are represented as documented estimates in each city configuration.
+
+Some district values are estimates where official samples were unavailable, and actual costs vary by property, household, provider, and personal circumstances. Threshold is an indicative planning tool, not financial advice.
 
 ## Stack
 
-- **Vite + React 19 + TypeScript** (strict mode)
-- **Tailwind CSS v4** via `@tailwindcss/vite` — no PostCSS config
-- **framer-motion** — animation system with `prefers-reduced-motion` support
-- **react-map-gl + MapLibre GL** — interactive district maps
-- **React Router 7** — file-based routing with lazy-loaded pages
-- **Vitest + Testing Library** — 182 tests, pure functions, no mocks
+- React 19, TypeScript in strict mode, and Vite
+- Tailwind CSS 4 and Framer Motion with reduced-motion support
+- MapLibre GL and React Map GL
+- React Router 7
+- Vitest and Testing Library
 
-**Key architectural principle:** all calculator state lives in the URL. No Redux, no Zustand, no Context — just `URLSearchParams` serialised on every input change. Any configuration is a shareable link.
-
----
-
-## Getting started
+## Run locally
 
 ```bash
-npm install
-npm run dev        # http://localhost:5173
-npm run build      # TypeScript check + production build
-npm run test       # run all 182 tests
-npm run lint       # ESLint
+npm ci
+npm run dev
 ```
 
----
+The development server runs at `http://localhost:5173`.
+
+## Verify
+
+```bash
+npm run lint
+npm test
+npm run build
+```
+
+The test suite covers calculations, data invariants, URL round-tripping, suggestions, comparisons, and the main UI flows.
 
 ## Project structure
 
-```
+```text
 src/
-├── data/           # City configs (rent, costs, map centre) + GeoJSON boundaries
-├── lib/            # Pure calculation functions + URL state serialisation
-│   ├── calculate.ts        # Monthly and upfront cost engine
-│   ├── affordability.ts    # CAN_AFFORD_NOW / NOT_YET / INCOME_INSUFFICIENT
-│   ├── suggestions.ts      # "What if" cost-saving suggestions
-│   └── url-state.ts        # Serialise/deserialise inputs ↔ URLSearchParams
-├── components/     # DistrictMap, ConfigPanel, AffordabilityPanel, etc.
-└── pages/          # Landing, Calculator (LondonCalculator + SwissCalculator)
+├── data/        # City costs, districts, transport, and map boundaries
+├── lib/         # Pure calculations and URL-state serialisation
+├── components/  # Maps, controls, affordability, and comparisons
+└── pages/       # Landing and calculator routes
 ```
-
----
-
-*Not financial advice.*
