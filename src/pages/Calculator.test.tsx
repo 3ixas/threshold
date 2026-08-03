@@ -1,13 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
 import Calculator from './Calculator'
 
 function renderCalculator(city: 'london' | 'basel' | 'zurich', search = '') {
-  return render(
-    <MemoryRouter initialEntries={[`/${city}${search}`]}>
-      <Calculator city={city} />
-    </MemoryRouter>
-  )
+  window.history.replaceState({}, '', `/${city}${search}`)
+  return render(<Calculator city={city} />)
 }
 
 describe('Calculator — London', () => {

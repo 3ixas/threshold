@@ -1,7 +1,7 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from '../lib/useSearchParams'
 import london from '../data/london'
 import londonBoroughs from '../data/london-boroughs'
 import basel from '../data/basel'
@@ -128,20 +128,20 @@ function LondonCalculator() {
     <div className="min-h-dvh bg-background flex flex-col">
       {/* Nav */}
       <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
-        <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">
+        <a href="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">
           Threshold
-        </Link>
+        </a>
         <span className="text-accent/70 select-none">·</span>
         <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
           London
         </span>
-        <Link
-          to="/"
+        <a
+          href="/"
           className="ml-auto flex items-center gap-1 text-xs font-label uppercase tracking-widest text-on-surface-variant/60 hover:text-on-surface transition-colors duration-150"
         >
           <span className="material-symbols-outlined text-sm font-light leading-none" style={{ fontSize: '14px' }}>arrow_back</span>
           Cities
-        </Link>
+        </a>
       </header>
 
       {/* Main: 55% map | 45% controls + results */}
@@ -334,16 +334,16 @@ function SwissCalculator({ config, geojson }: SwissCalculatorProps) {
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       <header className="w-full px-8 py-4 border-b border-outline-variant/30 flex items-center gap-4 bg-background">
-        <Link to="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">Threshold</Link>
+        <a href="/" className="text-2xl font-headline italic text-on-surface tracking-wide leading-none">Threshold</a>
         <span className="text-accent/70 select-none">·</span>
         <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{config.name}</span>
-        <Link
-          to="/"
+        <a
+          href="/"
           className="ml-auto flex items-center gap-1 text-xs font-label uppercase tracking-widest text-on-surface-variant/60 hover:text-on-surface transition-colors duration-150"
         >
           <span className="material-symbols-outlined font-light" style={{ fontSize: '14px' }}>arrow_back</span>
           Cities
-        </Link>
+        </a>
       </header>
 
       <div className="flex-1 flex flex-col min-h-0">
